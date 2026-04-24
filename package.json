@@ -1,0 +1,22 @@
+{
+  "name": "sustainable-fashion-checker",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/shared",
+    "packages/backend",
+    "packages/extension",
+    "packages/web-app"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "vitest --run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "fast-check": "^3.19.0",
+    "jsdom": "^29.0.2",
+    "typescript": "^5.4.0",
+    "vitest": "^1.6.0"
+  }
+}

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoPulse — Your Sustainable Fashion Dashboard</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a1a0a;color:#e0e0e0;min-height:100vh}
+a{color:#81c784;text-decoration:none}
+a:hover{text-decoration:underline}
+
+.hdr{background:linear-gradient(135deg,#0d2b0d,#1a4a1a);padding:1.5rem 2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #4caf50}
+.hdr h1{font-size:1.6rem;color:#81c784}
+.hdr .sub{color:#a5d6a7;font-size:.85rem;margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:1rem}
+.pts{background:#1b5e20;padding:.4rem .9rem;border-radius:20px;font-size:.85rem;color:#a5d6a7}
+.pts span{color:#81c784;font-weight:bold}
+
+.wrap{max-width:1100px;margin:0 auto;padding:1.5rem 1rem}
+
+/* Quick Analyze */
+.qa{background:linear-gradient(135deg,#1a2a1a,#1a3a1a);border:1px solid #2d5a2d;border-radius:12px;padding:1.5rem;margin-bottom:1.5rem}
+.qa h2{font-size:1.1rem;color:#81c784;margin-bottom:1rem}
+.qa-row{display:flex;gap:.8rem;flex-wrap:wrap;align-items:flex-end}
+.qa-field{flex:1;min-width:150px}
+.qa-field label{display:block;font-size:.78rem;color:#a5d6a7;margin-bottom:.25rem}
+.qa-field input,.qa-field textarea{width:100%;padding:.45rem .6rem;background:#0f1a0f;border:1px solid #2d5a2d;border-radius:4px;color:#e0e0e0;font-size:.85rem}
+.qa-field textarea{min-height:38px;resize:vertical}
+.qa-btn{padding:.5rem 1.5rem;background:#4caf50;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:.88rem;align-self:flex-end;white-space:nowrap;height:36px}
+.qa-btn:hover{background:#66bb6a}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem}
+@media(max-width:700px){.grid{grid-template-columns:1fr}}
+
+/* Cards */
+.card{background:#111e11;border:1px solid #1e3a1e;border-radius:10px;overflow:hidden}
+.card-hd{padding:.8rem 1rem;background:#152515;border-bottom:1px solid #1e3a1e;display:flex;align-items:center;justify-content:space-between}
+.card-hd h3{font-size:.92rem;color:#a5d6a7}
+.card-bd{padding:1rem}
+
+/* Scores */
+.scores{display:flex;gap:.6rem;margin-bottom:.8rem}
+.score-box{flex:1;padding:.7rem .4rem;border-radius:8px;text-align:center}
+.score-box .lbl{font-size:.62rem;text-transform:uppercase;letter-spacing:.5px;opacity:.8}
+.score-box .val{font-size:1.6rem;font-weight:bold;margin-top:2px}
+.sg{background:#1b5e20;color:#a5d6a7}.sr{background:#7f1d1d;color:#ef9a9a}
+.ind-pill{display:inline-block;padding:.2rem .7rem;border-radius:12px;font-size:.78rem;font-weight:600}
+.ind-pill.g{background:#2e7d32;color:#c8e6c9}.ind-pill.r{background:#c62828;color:#ffcdd2}
+
+/* Signals */
+.sig{padding:.35rem .6rem;background:#1a1a0f;border-left:3px solid #ff9800;margin-bottom:.4rem;border-radius:0 4px 4px 0;font-size:.76rem}
+.sig b{color:#ffb74d}
+
+/* Fabric */
+.fab-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.4rem;font-size:.82rem}
+.fab-bar{flex:1;height:8px;background:#1a2a1a;border-radius:4px;overflow:hidden}
+.fab-fill{height:100%;border-radius:4px}
+
+/* Chemical risks */
+.chem{font-size:.78rem;padding:.3rem 0;display:flex;align-items:center;gap:.4rem}
+.chem-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.chem-hi{background:#ef5350}.chem-md{background:#ff9800}.chem-lo{background:#66bb6a}
+
+/* Tips */
+.tip{padding:.6rem .8rem;background:#0f1a0f;border-radius:6px;margin-bottom:.5rem;font-size:.82rem;border-left:3px solid #4caf50}
+.tip-icon{margin-right:.4rem}
+
+/* History */
+.hist-item{display:flex;align-items:center;gap:.8rem;padding:.6rem 0;border-bottom:1px solid #1a2a1a;font-size:.82rem}
+.hist-item:last-child{border-bottom:none}
+.hist-pill{padding:.15rem .5rem;border-radius:10px;font-size:.7rem;font-weight:600;flex-shrink:0}
+
+/* Reward */
+.rw-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.6rem}
+.rw-btn{padding:.35rem .8rem;background:#1a2a1a;border:1px solid #2d5a2d;border-radius:6px;color:#a5d6a7;cursor:pointer;font-size:.78rem}
+.rw-btn:hover{background:#2d3a2d}
+
+/* Empty state */
+.empty{text-align:center;padding:2rem 1rem;color:#666;font-size:.88rem}
+.empty-icon{font-size:2.5rem;margin-bottom:.5rem}
+
+/* Floating widget */
+#fab{position:fixed;bottom:24px;right:24px;z-index:99999;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2e7d32,#4caf50);box-shadow:0 4px 18px rgba(0,0,0,.4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;border:none;transition:transform .2s;user-select:none}
+#fab:hover{transform:scale(1.1)}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div>
+    <h1>🌿 EcoPulse</h1>
+    <div class="sub">Your Sustainable Fashion Dashboard</div>
+  </div>
+  <div class="hdr-right">
+    <div class="pts">🏆 <span id="pts-val">0</span> points</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- Quick Analyze -->
+  <div class="qa">
+    <h2>🔍 Quick Product Analysis</h2>
+    <div class="qa-row">
+      <div class="qa-field" style="flex:2"><label>Product Name</label><input id="q-name" placeholder="e.g. Slim Fit Tank Top"></div>
+      <div class="qa-field"><label>Brand</label><input id="q-brand" placeholder="e.g. SHEIN"></div>
+      <div class="qa-field" style="flex:2"><label>Fabric Composition</label><input id="q-fabric" placeholder="e.g. 95% Polyester, 5% Spandex"></div>
+      <button class="qa-btn" id="q-go">Analyze →</button>
+    </div>
+    <div class="qa-row" style="margin-top:.5rem">
+      <div class="qa-field"><label>Claims (optional)</label><input id="q-claims" placeholder="eco-friendly, natural"></div>
+      <div class="qa-field"><label>Certifications (optional)</label><input id="q-certs" placeholder="GOTS, OEKO-TEX"></div>
+    </div>
+  </div>
+
+  <!-- Results + Insights Grid -->
+  <div class="grid" id="results-grid" style="display:none">
+
+    <!-- Score Card -->
+    <div class="card" id="score-card">
+      <div class="card-hd"><h3>📊 Sustainability Score</h3><span class="ind-pill" id="r-ind"></span></div>
+      <div class="card-bd">
+        <div id="r-name" style="font-size:.85rem;color:#81c784;margin-bottom:.6rem"></div>
+        <div class="scores" id="r-scores"></div>
+      </div>
+    </div>
+
+    <!-- Fabric Breakdown -->
+    <div class="card" id="fabric-card">
+      <div class="card-hd"><h3>🧵 Fabric Breakdown</h3></div>
+      <div class="card-bd" id="r-fabric"></div>
+    </div>
+
+    <!-- Greenwashing Alerts -->
+    <div class="card" id="gw-card" style="display:none">
+      <div class="card-hd"><h3>⚠️ Greenwashing Alerts</h3></div>
+      <div class="card-bd" id="r-gw"></div>
+    </div>
+
+    <!-- Chemical Risks -->
+    <div class="card" id="chem-card" style="display:none">
+      <div class="card-hd"><h3>🧪 Chemical & Health Risks</h3></div>
+      <div class="card-bd" id="r-chem"></div>
+    </div>
+  </div>
+
+  <!-- Tips + History Grid -->
+  <div class="grid">
+    <!-- Sustainability Tips -->
+    <div class="card">
+      <div class="card-hd"><h3>💡 Sustainability Tips</h3></div>
+      <div class="card-bd" id="tips-bd">
+        <div class="tip"><span class="tip-icon">🔍</span>Always check the fabric label — synthetic fabrics like polyester shed microplastics when washed.</div>
+        <div class="tip"><span class="tip-icon">♻️</span>Look for certifications like GOTS or OEKO-TEX — they verify real sustainability claims.</div>
+        <div class="tip"><span class="tip-icon">👕</span>Rewearing clothes 50+ times cuts their carbon footprint by 50%. Quality over quantity.</div>
+        <div class="tip"><span class="tip-icon">🌊</span>Wash synthetic clothes in a microfiber-catching bag to reduce ocean plastic pollution.</div>
+        <div class="tip"><span class="tip-icon">🏷️</span>Beware of vague terms like "eco-friendly" or "green" — without certifications, they're often greenwashing.</div>
+      </div>
+    </div>
+
+    <!-- Analysis History -->
+    <div class="card">
+      <div class="card-hd"><h3>📋 Recent Analyses</h3></div>
+      <div class="card-bd" id="history-bd">
+        <div class="empty"><div class="empty-icon">🌿</div>No analyses yet. Try analyzing a product above or use the browser extension on any fashion site.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rewards + Locations Grid -->
+  <div class="grid">
+    <!-- Reward Actions -->
+    <div class="card">
+      <div class="card-hd"><h3>🏆 Earn Reward Points</h3></div>
+      <div class="card-bd">
+        <div style="font-size:.82rem;color:#a5d6a7;margin-bottom:.6rem">Log sustainable actions to earn points:</div>
+        <div class="rw-row">
+          <button class="rw-btn" onclick="logReward('rewear')">👕 Log Rewear (+5)</button>
+          <button class="rw-btn" onclick="logReward('donation')">🎁 Log Donation (+15)</button>
+          <button class="rw-btn" onclick="logReward('repair')">🧵 Log Repair (+10)</button>
+          <button class="rw-btn" onclick="logReward('recycle')">♻️ Log Recycle (+20)</button>
+        </div>
+        <div id="rw-msg" style="font-size:.78rem;color:#81c784;margin-top:.5rem;display:none"></div>
+      </div>
+    </div>
+
+    <!-- Nearby Locations -->
+    <div class="card">
+      <div class="card-hd"><h3>📍 Donation & Recycling Near You</h3></div>
+      <div class="card-bd">
+        <div style="display:flex;gap:.5rem;align-items:flex-end">
+          <div style="flex:1"><label style="font-size:.75rem;color:#a5d6a7">Latitude</label><input id="loc-lat" value="40.7128" style="width:100%;padding:.35rem;background:#0f1a0f;border:1px solid #2d5a2d;border-radius:4px;color:#e0e0e0;font-size:.82rem"></div>
+          <div style="flex:1"><label style="font-size:.75rem;color:#a5d6a7">Longitude</label><input id="loc-lng" value="-74.006" style="width:100%;padding:.35rem;background:#0f1a0f;border:1px solid #2d5a2d;border-radius:4px;color:#e0e0e0;font-size:.82rem"></div>
+          <button class="qa-btn" style="height:32px;font-size:.8rem" onclick="findLocations()">Find</button>
+        </div>
+        <div id="loc-results" style="margin-top:.6rem;font-size:.82rem"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var history = [];
+var userId = 'user-' + Math.random().toString(36).substr(2, 6);
+
+// Load reward points
+fetch('/api/rewards/' + userId).then(r=>r.json()).then(d=>{
+  document.getElementById('pts-val').textContent = d.balance || 0;
+}).catch(()=>{});
+
+// Analyze
+document.getElementById('q-go').addEventListener('click', async function(){
+  var name = document.getElementById('q-name').value.trim();
+  var fabric = document.getElementById('q-fabric').value.trim();
+  if (!name || !fabric) { alert('Product name and fabric composition are required.'); return; }
+
+  this.textContent = 'Analyzing...'; this.disabled = true;
+  try {
+    var r = await fetch('/api/analyze', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      url: 'https://dashboard', productName: name,
+      brand: document.getElementById('q-brand').value.trim() || 'Unknown',
+      fabricCompositionText: fabric,
+      sustainabilityClaims: (document.getElementById('q-claims').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+      certificationMentions: (document.getElementById('q-certs').value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    })});
+    var d = await r.json();
+    if (d.error) throw new Error(d.error);
+    showAnalysis(d);
+    addToHistory(d);
+  } catch(e) { alert('Error: ' + e.message); }
+  this.textContent = 'Analyze →'; this.disabled = false;
+});
+
+function sc(v) { return v >= 50 ? 'sg' : 'sr'; }
+var fabColors = { cotton:'#8bc34a', polyester:'#ff9800', nylon:'#f44336', spandex:'#e91e63', elastane:'#e91e63',
+  silk:'#ce93d8', wool:'#795548', linen:'#cddc39', rayon:'#ff5722', viscose:'#ff5722', modal:'#4caf50',
+  lyocell:'#4caf50', tencel:'#4caf50', bamboo:'#66bb6a', acrylic:'#ff7043', cashmere:'#a1887f',
+  hemp:'#689f38', default:'#78909c' };
+
+function getFabColor(mat) { return fabColors[mat.toLowerCase()] || fabColors.default; }
+
+function showAnalysis(d) {
+  document.getElementById('results-grid').style.display = 'grid';
+  var s = d.score, ind = s.overallIndicator;
+
+  // Name + indicator
+  document.getElementById('r-name').textContent = d.productName + (d.brand !== 'Unknown' ? ' — ' + d.brand : '');
+  var indEl = document.getElementById('r-ind');
+  indEl.textContent = ind === 'green' ? '✓ Sustainable' : '⚠ Needs Work';
+  indEl.className = 'ind-pill ' + (ind === 'green' ? 'g' : 'r');
+
+  // Scores
+  document.getElementById('r-scores').innerHTML =
+    '<div class="score-box '+sc(s.environmental)+'"><div class="lbl">Environmental</div><div class="val">'+s.environmental+'</div></div>' +
+    '<div class="score-box '+sc(s.health)+'"><div class="lbl">Health</div><div class="val">'+s.health+'</div></div>' +
+    '<div class="score-box '+sc(s.greenwashing)+'"><div class="lbl">Greenwashing</div><div class="val">'+s.greenwashing+'</div></div>';
+
+  // Fabric
+  var fabHtml = '';
+  if (d.fabricComposition && d.fabricComposition.components.length) {
+    d.fabricComposition.components.forEach(function(c) {
+      var label = (c.qualifier ? c.qualifier + ' ' : '') + c.material;
+      var color = getFabColor(c.material);
+      fabHtml += '<div class="fab-row"><span style="min-width:100px">' + label + '</span><div class="fab-bar"><div class="fab-fill" style="width:'+c.percentage+'%;background:'+color+'"></div></div><span style="min-width:35px;text-align:right">'+c.percentage+'%</span></div>';
+    });
+  } else {
+    fabHtml = '<div style="color:#666;font-size:.82rem">No fabric data parsed</div>';
+  }
+  document.getElementById('r-fabric').innerHTML = fabHtml;
+
+  // Greenwashing
+  var gwCard = document.getElementById('gw-card');
+  if (d.greenwashingSignals && d.greenwashingSignals.length) {
+    gwCard.style.display = 'block';
+    var gwHtml = '';
+    d.greenwashingSignals.forEach(function(sig) {
+      gwHtml += '<div class="sig"><b>"'+sig.term+'"</b> — '+sig.explanation+'</div>';
+    });
+    document.getElementById('r-gw').innerHTML = gwHtml;
+  } else { gwCard.style.display = 'none'; }
+
+  // Chemical risks
+  var chemCard = document.getElementById('chem-card');
+  if (d.chemicalRisks && d.chemicalRisks.length) {
+    chemCard.style.display = 'block';
+    var chemHtml = '';
+    d.chemicalRisks.forEach(function(cr) {
+      var dotClass = cr.riskLevel === 'high' ? 'chem-hi' : cr.riskLevel === 'medium' ? 'chem-md' : 'chem-lo';
+      chemHtml += '<div class="chem"><div class="chem-dot '+dotClass+'"></div><span><b>'+cr.substance+'</b> ('+cr.riskLevel+') — '+cr.healthEffects.join(', ')+'</span></div>';
+    });
+    document.getElementById('r-chem').innerHTML = chemHtml;
+  } else { chemCard.style.display = 'none'; }
+
+  // Update tips based on analysis
+  updateTips(d);
+
+  // Scroll to results
+  document.getElementById('results-grid').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function updateTips(d) {
+  var tips = document.getElementById('tips-bd');
+  var custom = [];
+  if (d.score.environmental < 50) custom.push('<div class="tip"><span class="tip-icon">🌍</span>This product has a low environmental score. Consider alternatives made from organic cotton, linen, or Tencel.</div>');
+  if (d.score.health < 50) custom.push('<div class="tip"><span class="tip-icon">⚕️</span>Health concerns detected. Look for OEKO-TEX certified products to minimize chemical exposure.</div>');
+  if (d.score.greenwashing < 50) custom.push('<div class="tip"><span class="tip-icon">🚩</span>Greenwashing detected. Don\'t trust vague claims — look for specific certifications like GOTS or Bluesign.</div>');
+  if (d.fabricComposition) {
+    var hasSynthetic = d.fabricComposition.components.some(function(c) { return ['polyester','nylon','acrylic','spandex','elastane'].indexOf(c.material.toLowerCase()) !== -1; });
+    if (hasSynthetic) custom.push('<div class="tip"><span class="tip-icon">🌊</span>This product contains synthetic fibers. Use a Guppyfriend bag when washing to catch microplastics.</div>');
+  }
+  if (custom.length) tips.innerHTML = custom.join('') + tips.innerHTML;
+}
+
+function addToHistory(d) {
+  history.unshift(d);
+  var hbd = document.getElementById('history-bd');
+  var html = '';
+  history.slice(0, 8).forEach(function(item) {
+    var ind = item.score.overallIndicator;
+    var pillClass = ind === 'green' ? 'g' : 'r';
+    html += '<div class="hist-item"><span class="ind-pill '+pillClass+'" style="font-size:.65rem">'+item.score.environmental+'</span>' +
+      '<span style="flex:1">'+item.productName+'</span>' +
+      '<span style="color:#666;font-size:.75rem">'+(item.brand||'')+'</span></div>';
+  });
+  hbd.innerHTML = html;
+}
+
+// Rewards
+var rewardPts = { rewear: 5, donation: 15, repair: 10, recycle: 20 };
+var rewardLabels = { rewear: 'Rewear logged', donation: 'Donation logged', repair: 'Repair logged', recycle: 'Recycle logged' };
+
+async function logReward(type) {
+  try {
+    await fetch('/api/rewards', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({
+      userId: userId, type: type, points: rewardPts[type],
+      itemDescription: rewardLabels[type], timestamp: new Date().toISOString()
+    })});
+    var r = await fetch('/api/rewards/' + userId);
+    var d = await r.json();
+    document.getElementById('pts-val').textContent = d.balance || 0;
+    var msg = document.getElementById('rw-msg');
+    msg.textContent = '✓ +' + rewardPts[type] + ' points for ' + type + '!';
+    msg.style.display = 'block';
+    setTimeout(function(){ msg.style.display = 'none'; }, 3000);
+  } catch(e) {}
+}
+
+// Locations
+async function findLocations() {
+  var lat = document.getElementById('loc-lat').value;
+  var lng = document.getElementById('loc-lng').value;
+  var el = document.getElementById('loc-results');
+  el.innerHTML = 'Searching...';
+  try {
+    var r = await fetch('/api/locations?lat='+lat+'&lng='+lng+'&radius=50');
+    var d = await r.json();
+    if (!d.length) { el.innerHTML = '<span style="color:#666">No locations found nearby. Try a larger area.</span>'; return; }
+    var html = '';
+    d.forEach(function(loc) {
+      html += '<div style="padding:.4rem 0;border-bottom:1px solid #1a2a1a"><b>'+loc.name+'</b> ('+loc.type+')<br><span style="color:#888;font-size:.75rem">'+loc.address+' · '+loc.operatingHours+'</span></div>';
+    });
+    el.innerHTML = html;
+  } catch(e) { el.innerHTML = '<span style="color:#ef9a9a">Error loading locations</span>'; }
+}
+</script>
+</body>
+</html>
