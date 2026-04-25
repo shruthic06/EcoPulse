@@ -77,6 +77,7 @@ export interface ProductAnalysis {
   chemicalRisks: ChemicalRisk[];
   score: ProductScore;
   analyzedAt: Date;
+  imageUrl: string | null;
 }
 
 // Chat types (Requirement 6.1)
@@ -139,6 +140,7 @@ export interface ExtractedProductData {
   price: number | null;
   currency: string | null;
   category: string | null;
+  imageUrl: string | null;
 }
 
 // User types (Requirement 7.6)

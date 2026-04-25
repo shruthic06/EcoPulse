@@ -75,6 +75,35 @@ const CATEGORY_SELECTORS = [
   'nav[aria-label="breadcrumb"]',
 ];
 
+const IMAGE_SELECTORS = [
+  // Shein
+  '.crop-image-container img',
+  '.swiper-slide img',
+  '[class*="crop-image"] img',
+  // H&M
+  '[class*="product-detail"] img',
+  'figure.pdp-image img',
+  'figure img',
+  // Zara
+  '[class*="media-image"] img',
+  '[class*="product-media"] img',
+  // ASOS
+  '[data-testid="product-image"] img',
+  '#product-image img',
+  // Generic
+  'meta[property="og:image"]',
+  'meta[name="twitter:image"]',
+  '[class*="product-image"] img',
+  '[class*="product-gallery"] img',
+  '[class*="productImage"] img',
+  '[class*="pdp-image"] img',
+  '[itemprop="image"]',
+  '.product-detail img',
+  '[class*="gallery"] img',
+  '[class*="hero-image"] img',
+  '[class*="main-image"] img',
+];
+
 const KNOWN_CERTIFICATIONS = [
   "GOTS",
   "OEKO-TEX",
@@ -245,6 +274,38 @@ function extractCategory(doc: Document): string | null {
 }
 
 /**
+ * Extracts the primary product image URL from the page.
+ */
+function extractImageUrl(doc: Document): string | null {
+  for (const selector of IMAGE_SELECTORS) {
+    const el = doc.querySelector(selector);
+    if (!el) continue;
+
+    if (el instanceof HTMLMetaElement) {
+      const content = el.getAttribute("content");
+      if (content?.trim()) return upgradeImageUrl(content.trim());
+    } else if (el instanceof HTMLImageElement) {
+      // Check src, then lazy-load attributes
+      const src = el.src || el.getAttribute("data-src") || el.getAttribute("data-lazy-src") || el.getAttribute("data-original");
+      if (src?.trim() && !src.startsWith("data:")) return upgradeImageUrl(src.trim());
+    } else if (el.hasAttribute("content")) {
+      const content = el.getAttribute("content");
+      if (content?.trim()) return upgradeImageUrl(content.trim());
+    }
+  }
+  return null;
+}
+
+/** Upgrade retailer thumbnail URLs to higher resolution versions. */
+function upgradeImageUrl(url: string): string {
+  // Shein: swap thumbnail sizes for better quality
+  if (url.includes("shein.com")) {
+    return url.replace(/_thumbnail_\d+x\d+/, "").replace(/_\d+x\d+\./, "_600x800.");
+  }
+  return url;
+}
+
+/**
  * Shows a browser notification suggesting AI_Chat for manual input.
  * Falls back to console warning in non-browser environments.
  */
@@ -290,6 +351,7 @@ export function extract(doc: Document): ExtractedProductData | null {
     price: parsePrice(priceText),
     currency: extractCurrency(doc, priceText),
     category: extractCategory(doc),
+    imageUrl: extractImageUrl(doc),
   };
 }
 

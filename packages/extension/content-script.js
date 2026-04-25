@@ -346,6 +346,58 @@
   // ===== Full extraction =====
   function doExtract() {
     var fullLower = ((document.body && document.body.textContent) || "").toLowerCase();
+
+    // Extract product image — retailer-specific selectors first, then generic
+    var imageUrl = null;
+    var imgSelectors = [
+      // Shein
+      '.crop-image-container img',
+      '.swiper-slide img',
+      '[class*="crop-image"] img',
+      // H&M
+      '[class*="product-detail"] img',
+      'figure.pdp-image img',
+      'figure img',
+      // Zara
+      '[class*="media-image"] img',
+      '[class*="product-media"] img',
+      // ASOS
+      '[data-testid="product-image"] img',
+      '#product-image img',
+      // Generic / common patterns
+      'meta[property="og:image"]',
+      'meta[name="twitter:image"]',
+      '[class*="product-image"] img',
+      '[class*="product-gallery"] img',
+      '[class*="productImage"] img',
+      '[class*="pdp-image"] img',
+      '[itemprop="image"]',
+      '.product-detail img',
+      '[class*="gallery"] img',
+      '[class*="hero-image"] img',
+      '[class*="main-image"] img',
+    ];
+    for (var i = 0; i < imgSelectors.length; i++) {
+      var el = document.querySelector(imgSelectors[i]);
+      if (!el) continue;
+      if (el.tagName === 'META') {
+        var c = el.getAttribute('content');
+        if (c && c.trim()) { imageUrl = c.trim(); break; }
+      } else if (el.tagName === 'IMG') {
+        // Check src, then lazy-load attributes (data-src, data-lazy-src, data-original)
+        var src = el.src || el.getAttribute('data-src') || el.getAttribute('data-lazy-src') || el.getAttribute('data-original');
+        if (src && src.trim() && src.indexOf('data:') !== 0) { imageUrl = src.trim(); break; }
+      } else if (el.hasAttribute('content')) {
+        var ct = el.getAttribute('content');
+        if (ct && ct.trim()) { imageUrl = ct.trim(); break; }
+      }
+    }
+
+    // Shein: upgrade thumbnail URLs to higher resolution
+    if (imageUrl && imageUrl.indexOf('shein.com') !== -1) {
+      imageUrl = imageUrl.replace(/_thumbnail_\d+x\d+/, '').replace(/_\d+x\d+\./, '_600x800.');
+    }
+
     return {
       url: location.href,
       productName: getProductName(),
@@ -353,6 +405,7 @@
       fabricCompositionText: extractFabric(),
       sustainabilityClaims: SUST_KW.filter(function(kw) { return fullLower.indexOf(kw) !== -1; }),
       certificationMentions: CERT_KW.filter(function(c) { return fullLower.indexOf(c.toLowerCase()) !== -1; }),
+      imageUrl: imageUrl,
     };
   }
 
@@ -504,6 +557,9 @@
     var claims = (document.getElementById("ep-claims").value || "").trim();
     var certs = (document.getElementById("ep-certs").value || "").trim();
 
+    // Get the extracted image URL
+    var extractedData = doExtract();
+
     fetch(API_BASE + "/api/analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -514,6 +570,7 @@
         fabricCompositionText: fabric,
         sustainabilityClaims: claims ? claims.split(",").map(function(s){return s.trim();}).filter(Boolean) : [],
         certificationMentions: certs ? certs.split(",").map(function(s){return s.trim();}).filter(Boolean) : [],
+        imageUrl: extractedData.imageUrl || null,
       }),
     })
     .then(function(res) { if (!res.ok) throw new Error("API error: " + res.status); return res.json(); })
@@ -562,7 +619,7 @@
       html += '</div>';
     }
 
-    html += '<a class="ep-link" href="' + API_BASE + '" target="_blank">Open Full Dashboard →</a>';
+    html += '<a class="ep-link" href="' + API_BASE + '?analysis=' + encodeURIComponent(analysis.url) + '" target="_blank">Open Full Dashboard →</a>';
     html += '<button class="ep-btn ep-btn-secondary" id="ep-reset">Analyze Another</button>';
 
     document.getElementById("ep-loading").style.display = "none";

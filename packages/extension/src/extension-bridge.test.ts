@@ -21,6 +21,7 @@ function makeProductData(overrides: Partial<ExtractedProductData> = {}): Extract
     price: 29.99,
     currency: "USD",
     category: "T-Shirts",
+    imageUrl: null,
     ...overrides,
   };
 }
@@ -51,6 +52,7 @@ function makeAnalysis(overrides: Partial<ProductAnalysis> = {}): ProductAnalysis
     chemicalRisks: [],
     score: makeScore(),
     analyzedAt: new Date(),
+    imageUrl: null,
     ...overrides,
   };
 }

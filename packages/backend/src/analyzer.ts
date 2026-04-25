@@ -167,6 +167,7 @@ export function analyze(data: ExtractedProductData): ProductAnalysis {
     chemicalRisks,
     score,
     analyzedAt: new Date(),
+    imageUrl: data.imageUrl ?? null,
   };
 
   // Cache by URL
