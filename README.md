@@ -1,4 +1,4 @@
-# EcoPulse — AI-Powered Sustainable Fashion Checker
+# 🌿 EcoPulse — AI-Powered Sustainable Fashion Checker
 
 EcoPulse helps shoppers make informed, sustainable fashion choices. It consists of a Chrome extension that extracts product data from retailer pages, a Python AI service that analyzes sustainability using OpenAI, and a web dashboard that displays the results.
 
