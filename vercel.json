@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm install --include=dev && npm run build",
+  "buildCommand": "npx tsc -b packages/shared && npx tsc -b packages/backend",
   "functions": {
     "api/server.js": {
       "maxDuration": 30
