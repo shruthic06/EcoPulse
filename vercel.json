@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npx tsc -b packages/shared && npx tsc -b packages/backend",
+  "buildCommand": "npx tsc -b packages/shared packages/backend",
   "functions": {
     "api/server.js": {
       "maxDuration": 30
