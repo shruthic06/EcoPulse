@@ -31,6 +31,31 @@ app.use((_req, res, next) => {
   next();
 });
 
+// GET /api/image-proxy — proxy external product images to avoid CORS issues
+app.get("/api/image-proxy", async (req: Request, res: Response) => {
+  const imageUrl = req.query.url;
+  if (typeof imageUrl !== "string" || !imageUrl.startsWith("http")) {
+    res.status(400).json({ error: "Valid image URL required." });
+    return;
+  }
+  try {
+    const response = await fetch(imageUrl, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; EcoPulse/1.0)" },
+    });
+    if (!response.ok) {
+      res.status(response.status).end();
+      return;
+    }
+    const contentType = response.headers.get("content-type") || "image/jpeg";
+    res.setHeader("Content-Type", contentType);
+    res.setHeader("Cache-Control", "public, max-age=86400");
+    const buffer = Buffer.from(await response.arrayBuffer());
+    res.send(buffer);
+  } catch {
+    res.status(502).json({ error: "Failed to fetch image." });
+  }
+});
+
 // Serve dashboard at root
 app.get("/", (_req: Request, res: Response) => {
   // Try src/ first (dev), then same dir as compiled JS (dist/)
