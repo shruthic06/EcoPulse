@@ -5,7 +5,7 @@
   "functions": {
     "api/server.js": {
       "maxDuration": 30,
-      "includeFiles": "packages/**"
+      "includeFiles": "packages/backend/**,packages/shared/**"
     }
   },
   "rewrites": [
