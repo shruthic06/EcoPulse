@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "installCommand": "npm install --production",
+  "installCommand": "npm install",
   "buildCommand": "",
   "functions": {
-    "api/server.js": {
+    "api/**": {
       "maxDuration": 30,
-      "includeFiles": "packages/backend/**,packages/shared/**"
+      "includeFiles": "packages/**"
     }
   },
   "rewrites": [
