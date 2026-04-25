@@ -10,6 +10,7 @@ import {
   getHistory,
   findNearby,
 } from "./index.js";
+import { aiAnalyze, aiChat } from "./ai-openai-service.js";
 
 import * as fs from "fs";
 import * as path from "path";
@@ -109,7 +110,7 @@ app.post("/api/analyze", async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/ai-analyze — run AI-powered product analysis via Python service
+// POST /api/ai-analyze — run AI-powered product analysis via OpenAI (Node.js direct)
 app.post("/api/ai-analyze", async (req: Request, res: Response) => {
   try {
     const body = req.body;
@@ -120,45 +121,26 @@ app.post("/api/ai-analyze", async (req: Request, res: Response) => {
       typeof body.fabricCompositionText !== "string"
     ) {
       res.status(400).json({
-        error:
-          "Invalid input. Required fields: productName, brand, fabricCompositionText (strings).",
+        error: "Invalid input. Required fields: productName, brand, fabricCompositionText (strings).",
       });
       return;
     }
 
-    // First parse fabric locally so we can send structured components to the AI
     const { parse } = await import("./fabric-parser.js");
     const parsed = parse(body.fabricCompositionText);
 
-    const aiPayload = {
-      product_name: body.productName,
+    const aiData = await aiAnalyze({
+      productName: body.productName,
       brand: body.brand,
-      fabric_components: parsed.components.map((c: { material: string; percentage: number; qualifier?: string }) => ({
+      fabricComponents: parsed.components.map((c: { material: string; percentage: number; qualifier?: string }) => ({
         material: c.material,
         percentage: c.percentage,
         qualifier: c.qualifier ?? null,
       })),
-      sustainability_claims: Array.isArray(body.sustainabilityClaims)
-        ? body.sustainabilityClaims
-        : [],
-      certification_mentions: Array.isArray(body.certificationMentions)
-        ? body.certificationMentions
-        : [],
-    };
-
-    const aiRes = await fetch(`${AI_SERVICE_URL}/analyze`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(aiPayload),
+      sustainabilityClaims: Array.isArray(body.sustainabilityClaims) ? body.sustainabilityClaims : [],
+      certificationMentions: Array.isArray(body.certificationMentions) ? body.certificationMentions : [],
     });
 
-    if (!aiRes.ok) {
-      const errBody = await aiRes.text();
-      res.status(aiRes.status).json({ error: `AI service error: ${errBody}` });
-      return;
-    }
-
-    const aiData = await aiRes.json();
     res.json(aiData);
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Internal server error";
@@ -182,7 +164,7 @@ app.get("/api/analysis/:id", (req: Request, res: Response) => {
   }
 });
 
-// POST /api/chat — AI Chat Service (proxied to Python AI service)
+// POST /api/chat — AI Chat Service (direct OpenAI call)
 app.post("/api/chat", async (req: Request, res: Response) => {
   try {
     const body = req.body;
@@ -191,53 +173,38 @@ app.post("/api/chat", async (req: Request, res: Response) => {
       return;
     }
 
-    // Route: analyzeMaterialComposition (keep existing behavior)
     if (typeof body.compositionText === "string") {
       const result = await analyzeMaterialComposition(body.userId, body.compositionText);
       res.json(result);
       return;
     }
 
-    // Route: conversational query — forward to Python AI service
     if (typeof body.message === "string") {
       const conversationHistory = Array.isArray(body.conversationHistory)
         ? body.conversationHistory
         : [];
 
-      const aiPayload = {
-        message: body.message,
-        conversation_history: conversationHistory.map((m: { role: string; content: string }) => ({
-          role: m.role,
-          content: m.content,
-        })),
-        product_context: typeof body.productContext === "string" ? body.productContext : null,
-      };
-
       try {
-        const aiRes = await fetch(`${AI_SERVICE_URL}/chat`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(aiPayload),
+        const aiData = await aiChat({
+          message: body.message,
+          conversationHistory: conversationHistory.map((m: { role: string; content: string }) => ({
+            role: m.role,
+            content: m.content,
+          })),
+          productContext: typeof body.productContext === "string" ? body.productContext : null,
         });
-
-        if (aiRes.ok) {
-          const aiData = await aiRes.json();
-          res.json(aiData);
-          return;
-        }
+        res.json(aiData);
+        return;
       } catch {
-        // Fall through to local LLM if AI service is unavailable
+        // Fallback to local query if OpenAI fails
+        const result = await query(body.userId, body.message, conversationHistory);
+        res.json(result);
+        return;
       }
-
-      // Fallback to local query if AI service is down
-      const result = await query(body.userId, body.message, conversationHistory);
-      res.json(result);
-      return;
     }
 
     res.status(400).json({
-      error:
-        "Invalid input. Provide either 'message' (string) with optional 'conversationHistory', or 'compositionText' (string).",
+      error: "Invalid input. Provide either 'message' (string) or 'compositionText' (string).",
     });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Internal server error";

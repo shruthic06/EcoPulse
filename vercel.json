@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "buildCommand": "npm install --include=dev && npm run build",
+  "functions": {
+    "api/server.js": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/api/server" }
+  ]
+}

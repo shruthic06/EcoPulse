@@ -10,7 +10,8 @@
   },
   "dependencies": {
     "@ecopulse/shared": "*",
-    "express": "^4.19.0"
+    "express": "^4.19.0",
+    "openai": "^6.34.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.21"
