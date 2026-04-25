@@ -152,3 +152,8 @@ npm test
 | `OPENAI_MODEL` | `packages/ai-service/.env` | Model to use (default: `gpt-4o`) |
 | `AI_SERVICE_URL` | Node backend env | Python service URL (default: `http://localhost:8000`) |
 | `PORT` | Node backend env | Dashboard port (default: `3000`) |
+
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
