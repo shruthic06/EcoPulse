@@ -1,0 +1,2 @@
+export type { FabricComponent, ParseResult, Certification, VerificationResult, CertificationRecord, GreenwashingSignal, ChemicalRisk, ScoringInput, ProductScore, ProductAnalysis, ChatMessage, ChatResponse, RewardEventType, RewardEvent, Location, SustainableAlternative, ExtractedProductData, User, } from "./types.js";
+//# sourceMappingURL=index.d.ts.map
