@@ -236,15 +236,12 @@ textarea.form-input{min-height:50px;resize:vertical}
   </div>
   <div class="sidebar-nav">
     <div class="nav-section">
-      <div class="nav-label">Main</div>
       <div class="nav-item active" data-page="analyze" role="button" tabindex="0">Analyze</div>
     </div>
     <div class="nav-section">
-      <div class="nav-label">Marketplace</div>
       <div class="nav-item" data-page="sell" role="button" tabindex="0">Sell Clothes</div>
     </div>
     <div class="nav-section">
-      <div class="nav-label">Sustainability</div>
       <div class="nav-item" data-page="rewards" role="button" tabindex="0">Rewards</div>
     </div>
   </div>
@@ -407,11 +404,11 @@ textarea.form-input{min-height:50px;resize:vertical}
             </div>
 
             <!-- Trust signals -->
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-top:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;text-align:center">
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x2705;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Evidence-Based</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">We use trusted data and certifications.</div></div>
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x1F512;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Transparent</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">We show what we know and what we don't.</div></div>
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x1F30D;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Better for You &amp; Planet</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">Small choices. Big impact.</div></div>
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x267B;&#xFE0F;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Reduce. Reuse.</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">Rethink Fashion.</div></div>
+            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-top:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;text-align:left">
+              <div style="display:flex;align-items:center;gap:.5rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green-dark)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg><div><div style="font-size:.75rem;font-weight:600;color:var(--text)">Evidence-Based</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">We use trusted data and certifications.</div></div></div>
+              <div style="display:flex;align-items:center;gap:.5rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green-dark)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><rect x="9" y="10" width="6" height="7" rx="1"/><path d="M10 10V8a2 2 0 114 0v2"/></svg><div><div style="font-size:.75rem;font-weight:600;color:var(--text)">Transparent</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">We show what we know and what we don't.</div></div></div>
+              <div style="display:flex;align-items:center;gap:.5rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green-dark)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 000-7.78z"/><path d="M12 8c1 2 3 3 3 5a3 3 0 01-6 0c0-2 2-3 3-5z"/></svg><div><div style="font-size:.75rem;font-weight:600;color:var(--text)">Better for You &amp; Planet</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">Small choices. Big impact.</div></div></div>
+              <div style="display:flex;align-items:center;gap:.5rem"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--green-dark)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7.5 7.5c3-3 9-3 9 0s-6 3-9 0z"/><path d="M16.5 16.5c-3 3-9 3-9 0s6-3 9 0z"/><path d="M4 12h1m14 0h1M12 4v1m0 14v1"/><path d="M7 4l1.5 2M16.5 18L15 16M4 17l2-1.5M18 7.5L20 7"/></svg><div><div style="font-size:.75rem;font-weight:600;color:var(--text)">Reduce. Reuse.</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">Rethink Fashion.</div></div></div>
             </div>
           </div>
           <div>
@@ -434,7 +431,6 @@ textarea.form-input{min-height:50px;resize:vertical}
                   <span style="color:var(--text-muted);font-size:.8rem">&#x203A;</span>
                 </div>
               </div>
-              <a href="#" onclick="navigateTo('sell');return false" style="display:block;text-align:right;font-size:.75rem;color:var(--green-dark);font-weight:500;margin-top:.55rem">View more alternatives &#x2192;</a>
             </div>
             <div style="background:var(--green-pale);border:1px solid var(--green-light);border-radius:var(--radius);padding:1.5rem;display:flex;gap:.85rem;align-items:center">
               <div style="font-size:2.5rem;flex-shrink:0">&#x1F30D;</div>
@@ -498,7 +494,7 @@ textarea.form-input{min-height:50px;resize:vertical}
         <div class="card"><div class="card-hd"><h3><span class="ic">🏆</span> Earn Points</h3></div><div class="card-bd">
           <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.6rem">Log sustainable actions to earn reward points:</p>
           <div style="display:flex;gap:.4rem;flex-wrap:wrap">
-            <button class="btn btn-outline" onclick="logReward('donation')">&#x1F381; Donation <span style="color:var(--green-dark);font-weight:700">+15</span></button>
+            <button class="btn btn-outline" onclick="logReward('donation')">&#x1F381; Donation <span style="color:var(--green-dark);font-weight:700">+25</span></button>
           </div>
           <div id="rw-msg" style="font-size:.72rem;color:var(--green-dark);margin-top:.4rem;display:none"></div>
         </div></div>
@@ -682,12 +678,12 @@ document.getElementById('sell-submit').addEventListener('click',function(){
   myListings.unshift({id:Date.now(),title:t,category:document.getElementById('sell-category').value,condition:document.getElementById('sell-condition').value,price:parseFloat(p).toFixed(2),size:document.getElementById('sell-size').value||'—',date:new Date().toLocaleDateString()});
   renderMyListings();
   document.getElementById('sell-title').value='';document.getElementById('sell-price').value='';document.getElementById('sell-size').value='';document.getElementById('sell-desc').value='';document.getElementById('upload-preview').innerHTML='';uploadedImages=[];
-  logReward('recycle');showToast('Item listed! +25 bonus points earned.');
+  logReward('donation');showToast('Item listed! +25 bonus points earned.');
 });
 function renderMyListings(){var el=document.getElementById('my-listings'),ct=document.getElementById('listing-count');ct.textContent=myListings.length+' item'+(myListings.length!==1?'s':'');if(!myListings.length){el.innerHTML='<div class="empty"><div class="ei">👗</div><p>No listings yet.</p></div>';return}var h='';myListings.forEach(function(i){h+='<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--border-light);font-size:.78rem"><div style="width:32px;height:32px;background:var(--bg);border-radius:var(--radius-xs);display:flex;align-items:center;justify-content:center">👗</div><div style="flex:1"><div style="font-weight:600">'+i.title+'</div><div style="font-size:.65rem;color:var(--text-muted)">'+i.category+' · Size '+i.size+'</div></div><span style="font-weight:700;color:var(--green-dark)">$'+i.price+'</span></div>'});el.innerHTML=h}
 
 // REWARDS
-var rwPts={rewear:5,donation:15,repair:10,recycle:20},rwLabels={rewear:'Rewear',donation:'Donation',repair:'Repair',recycle:'Recycle'},rwIcons={rewear:'👕',donation:'🎁',repair:'🧵',recycle:'♻️'};
+var rwPts={rewear:5,donation:25,repair:10,recycle:20},rwLabels={rewear:'Rewear',donation:'Donation',repair:'Repair',recycle:'Recycle'},rwIcons={rewear:'👕',donation:'🎁',repair:'🧵',recycle:'♻️'};
 async function logReward(type){try{await fetch('/api/rewards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:userId,type:type,points:rwPts[type],itemDescription:rwLabels[type]+' logged',timestamp:new Date().toISOString()})});var r=await fetch('/api/rewards/'+userId);var d=await r.json();var b=d.balance||0;document.getElementById('pts-val').textContent=b.toLocaleString();document.getElementById('rw-total').textContent=b.toLocaleString();document.getElementById('rw-total-page').textContent=b;updateLevel(b);if(d.history){document.getElementById('rw-actions').textContent=d.history.length;renderRewardHistory(d.history)}var msg=document.getElementById('rw-msg');msg.textContent='✓ +'+rwPts[type]+' points for '+type+'!';msg.style.display='block';setTimeout(function(){msg.style.display='none'},3000)}catch(e){}}
 function updateLevel(p){document.getElementById('rw-level').textContent=p>=1000?'🌍 Earth Guardian':p>=500?'🌳 Tree':p>=100?'🌿 Sprout':'🌱 Seedling'}
 function renderRewardHistory(ev){var el=document.getElementById('rw-history');if(!ev.length)return;var h='';ev.slice(-10).reverse().forEach(function(e){var ic=rwIcons[e.type]||'🏆';h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border-light);font-size:.75rem"><span>'+ic+' '+e.itemDescription+'</span><span style="color:var(--green-dark);font-weight:600">+'+e.points+'</span><span style="color:var(--text-muted);font-size:.65rem">'+new Date(e.timestamp).toLocaleDateString()+'</span></div>'});el.innerHTML=h}
