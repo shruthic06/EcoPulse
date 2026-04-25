@@ -290,64 +290,74 @@ textarea.form-input{min-height:50px;resize:vertical}
     <div class="page active" id="page-analyze">
 
       <!-- Hidden inputs for analysis API -->
-      <input type="hidden" id="a-name" value="Polyester Blend Garment">
+      <input type="hidden" id="a-name" value="">
       <input type="hidden" id="a-brand" value="">
-      <input type="hidden" id="a-fabric" value="95% Polyester, 5% Elastane">
+      <input type="hidden" id="a-fabric" value="">
       <input type="hidden" id="a-claims" value="">
       <input type="hidden" id="a-certs" value="">
+      <input type="hidden" id="a-imageUrl" value="">
       <button id="a-go" style="display:none"></button>
 
-      <!-- RESULTS -->
-      <div id="analysis-results">
+      <!-- LOADING STATE (shown while AI analyzes) -->
+      <div id="analysis-loading" style="display:none;text-align:center;padding:4rem 1rem">
+        <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">Analyzing with AI...</h2>
+        <p style="font-size:.82rem;color:var(--text-dim)">Getting environmental and health data from OpenAI. This may take a few seconds.</p>
+        <div style="margin-top:1.5rem;width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 1s linear infinite;margin-left:auto;margin-right:auto"></div>
+        <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+      </div>
+
+      <!-- EMPTY STATE (shown when no product data) -->
+      <div id="analysis-empty">
+        <div class="empty" style="padding:4rem 1rem">
+          <div class="ei" style="font-size:3rem">🌿</div>
+          <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem;margin-top:.5rem">No product to analyze</h2>
+          <p style="font-size:.82rem;color:var(--text-dim)">Use the EcoPulse browser extension on a product page, then click "Open Full Dashboard" to see the AI-powered analysis here.</p>
+        </div>
+      </div>
+
+      <!-- RESULTS (populated dynamically by JS after AI response) -->
+      <div id="analysis-results" style="display:none">
 
         <div class="back-link" onclick="navigateTo('dashboard')">← Back to results</div>
 
-        <!-- Product Hero: Image left, Info + Metrics right -->
+        <!-- Product Hero -->
         <div style="display:flex;gap:1.25rem;background:var(--white);border-radius:var(--radius);padding:1.1rem;border:1px solid var(--border);margin-bottom:.85rem">
-          <!-- Product Image -->
           <div id="r-img-wrap" style="width:200px;min-height:240px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#ede9fe,#ddd6fe);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative">
             <img id="r-img" src="" alt="Product image" style="width:100%;height:100%;object-fit:cover;display:none">
             <span id="r-img-fallback" style="font-size:4rem">👚</span>
             <div style="position:absolute;bottom:8px;left:8px;font-size:1.8rem">🌿</div>
           </div>
-          <!-- Info + Metrics -->
           <div style="flex:1;display:flex;flex-direction:column">
-            <!-- Top row: name + actions -->
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.3rem">
               <div>
-                <h2 id="r-product-name" style="font-size:1.3rem;font-weight:700;margin-bottom:.15rem">Polyester Blend Garment</h2>
-                <div id="r-subtitle" style="font-size:.85rem;color:var(--text-dim);margin-bottom:.45rem">95% Polyester · 5% Elastane</div>
-                <span class="impact-badge impact-high" id="r-impact">🔥 High overall impact</span>
+                <h2 id="r-product-name" style="font-size:1.3rem;font-weight:700;margin-bottom:.15rem"></h2>
+                <div id="r-subtitle" style="font-size:.85rem;color:var(--text-dim);margin-bottom:.45rem"></div>
+                <span class="impact-badge" id="r-impact"></span>
               </div>
               <div style="display:flex;gap:.4rem">
                 <button class="action-btn">♡ Save</button>
                 <button class="action-btn">↗ Share</button>
               </div>
             </div>
-            <!-- Metrics -->
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-top:auto">
-              <div class="metric-card"><div class="mc-icon">🏭</div><div class="mc-label">Carbon emissions</div><div class="mc-value red" id="mc-carbon">9.74 kg</div><div class="mc-sub">CO₂ equivalent</div><div class="mc-tag tag-high" id="mc-carbon-tag">High</div></div>
-              <div class="metric-card"><div class="mc-icon">💧</div><div class="mc-label">Water usage</div><div class="mc-value green" id="mc-water">72.95 L</div><div class="mc-sub">per garment produced</div><div class="mc-tag tag-low" id="mc-water-tag">Low</div></div>
-              <div class="metric-card"><div class="mc-icon">💜</div><div class="mc-label">Health risk</div><div class="mc-value red" id="mc-health">High</div><div class="mc-sub" id="mc-health-sub">100% synthetic blend</div><div class="mc-tag tag-high" id="mc-health-tag">High</div></div>
-              <div class="metric-card"><div class="mc-icon">🧪</div><div class="mc-label">Synthetic content</div><div class="mc-value purple" id="mc-synth">100%</div><div class="mc-sub">no natural fibers</div><div class="mc-tag tag-high" id="mc-synth-tag">High</div></div>
+              <div class="metric-card"><div class="mc-icon">🏭</div><div class="mc-label">Carbon emissions</div><div class="mc-value" id="mc-carbon">—</div><div class="mc-sub">CO₂ equivalent</div><div class="mc-tag" id="mc-carbon-tag"></div></div>
+              <div class="metric-card"><div class="mc-icon">💧</div><div class="mc-label">Water usage</div><div class="mc-value" id="mc-water">—</div><div class="mc-sub">per garment produced</div><div class="mc-tag" id="mc-water-tag"></div></div>
+              <div class="metric-card"><div class="mc-icon">💜</div><div class="mc-label">Health risk</div><div class="mc-value" id="mc-health">—</div><div class="mc-sub" id="mc-health-sub"></div><div class="mc-tag" id="mc-health-tag"></div></div>
+              <div class="metric-card"><div class="mc-icon">🧪</div><div class="mc-label">Synthetic content</div><div class="mc-value" id="mc-synth">—</div><div class="mc-sub">—</div><div class="mc-tag" id="mc-synth-tag"></div></div>
             </div>
           </div>
         </div>
 
         <!-- Material Breakdown -->
         <div class="card">
-          <div class="card-hd"><h3><span class="ic">🧵</span> Material Breakdown <span style="font-size:.7rem;color:var(--text-muted);font-weight:400;margin-left:.2rem">ⓘ</span></h3></div>
+          <div class="card-hd"><h3><span class="ic">🧵</span> Material Breakdown</h3></div>
           <div class="card-bd">
             <div class="mat-section">
-              <div id="r-materials">
-                <div class="mat-item"><div class="mat-name">Polyester</div><div class="mat-meta">9.52 kg CO₂/kg · 71 L/kg</div><div class="mat-bar-row"><div class="mat-bar"><div class="mat-fill" style="width:95%;background:var(--red)"></div></div><span class="mat-pct">95%</span></div></div>
-                <div class="mat-item"><div class="mat-name">Elastane</div><div class="mat-meta">14.0 kg CO₂/kg · 110 L/kg</div><div class="mat-bar-row"><div class="mat-bar"><div class="mat-fill" style="width:5%;background:var(--orange)"></div></div><span class="mat-pct">5%</span></div></div>
-                <div class="mat-note">CO₂ and water usage are weighted by the percentage of each material.</div>
-              </div>
+              <div id="r-materials"></div>
               <div class="mat-explain">
                 <h4>💡 What does this mean?</h4>
-                <p>Polyester has lower water usage but higher carbon emissions and health risks compared to natural fibers.</p>
-                <div style="margin-top:.6rem;text-align:center;font-size:3rem">🌍</div>
+                <p>Loading AI analysis...</p>
               </div>
             </div>
           </div>
@@ -359,20 +369,15 @@ textarea.form-input{min-height:50px;resize:vertical}
             <div class="health-grid">
               <div class="health-section">
                 <h4><span style="color:var(--red)">⚠️</span> Health Risks</h4>
-                <div id="r-health-risks">
-                  <div class="risk-item"><div class="risk-icon r">🔴</div><div><b>Microplastic shedding</b> — polyester releases thousands of plastic microfibers per wash cycle that enter waterways and the food chain.</div></div>
-                  <div class="risk-item"><div class="risk-icon o">🟠</div><div><b>Skin irritation</b> — synthetic fibers trap heat and moisture against skin, increasing risk of dermatitis and allergic reactions.</div></div>
-                  <div class="risk-item"><div class="risk-icon o">🟠</div><div><b>Chemical residues</b> — polyester production involves antimony trioxide, a potential carcinogen, which can remain in finished fabric.</div></div>
-                  <div class="risk-item"><div class="risk-icon r">🔴</div><div><b>Poor breathability</b> — 100% synthetic blends reduce airflow, creating conditions for bacterial and fungal growth with extended wear.</div></div>
-                </div>
+                <div id="r-health-risks"></div>
               </div>
               <div class="health-section">
                 <h4><span style="color:var(--green)">✅</span> Biodegradability</h4>
-                <div class="bio-val" id="r-bio-val">0–20 years+</div>
+                <div class="bio-val" id="r-bio-val">—</div>
                 <div class="bio-sub">Estimated decomposition time in landfill</div>
-                <div class="bio-bar"><div class="bio-dot" style="right:5%"></div></div>
+                <div class="bio-bar"><div class="bio-dot" style="right:50%"></div></div>
                 <div class="bio-labels"><span>Biodegradable<br>(0–1 year)</span><span>Limited<br>(1–10 years)</span><span>Not biodegradable<br>(10–100+ years)</span></div>
-                <div class="why-box"><div class="wi">💬</div><div><h5>Why it matters</h5><p>Synthetic fibers like polyester do not biodegrade naturally and can persist in the environment for decades or even centuries.</p></div></div>
+                <div class="why-box"><div class="wi">💬</div><div><h5>Why it matters</h5><p>Loading AI analysis...</p></div></div>
               </div>
             </div>
           </div>
@@ -381,63 +386,29 @@ textarea.form-input{min-height:50px;resize:vertical}
         <!-- Alternatives + Rewards -->
         <div class="grid-main">
           <div>
-            <!-- Better Choices -->
             <div class="card">
               <div class="card-hd"><h3><span class="ic">🌿</span> Better Choices: Verified Alternatives</h3><a href="#" onclick="navigateTo('alternatives');return false">View all alternatives →</a></div>
               <div class="card-bd">
-                <div class="alt-scroll" id="r-alternatives">
-                  <div class="alt-card"><div class="alt-img">👕<div class="alt-badges"><span class="alt-badge-ic" style="background:var(--green-pale);color:var(--green)">🛡</span></div></div><div class="alt-info"><h5>Organic Cotton Tee</h5><div class="alt-fabric">100% Organic Cotton</div><div class="alt-certs"><span class="alt-cert cg">GOTS</span><span class="alt-cert cp">OEKO-TEX</span></div><div class="alt-impact"><span class="tag-low">Low impact</span></div><div class="alt-price">$24.99</div><button class="alt-btn">View product</button></div></div>
-                  <div class="alt-card"><div class="alt-img">👕<div class="alt-badges"><span class="alt-badge-ic" style="background:var(--green-pale);color:var(--green)">🛡</span></div></div><div class="alt-info"><h5>Hemp Blend Tee</h5><div class="alt-fabric">55% Hemp, 45% Organic Cotton</div><div class="alt-certs"><span class="alt-cert cp">OEKO-TEX</span><span class="alt-cert cg">Fair Trade</span></div><div class="alt-impact"><span class="tag-low">Low impact</span></div><div class="alt-price">$29.99</div><button class="alt-btn">View product</button></div></div>
-                  <div class="alt-card"><div class="alt-img">👕<div class="alt-badges"><span class="alt-badge-ic" style="background:var(--green-pale);color:var(--green)">🛡</span></div></div><div class="alt-info"><h5>TENCEL™ Modal Tee</h5><div class="alt-fabric">100% TENCEL™ Modal</div><div class="alt-certs"><span class="alt-cert cp">OEKO-TEX</span></div><div class="alt-impact"><span class="tag-low">Low impact</span></div><div class="alt-price">$28.00</div><button class="alt-btn">View product</button></div></div>
-                  <div class="alt-card"><div class="alt-img">👕<div class="alt-badges"><span class="alt-badge-ic" style="background:var(--orange-pale);color:var(--orange)">⚡</span></div></div><div class="alt-info"><h5>Recycled Polyester Tee</h5><div class="alt-fabric">100% Recycled Polyester</div><div class="alt-certs"><span class="alt-cert cg">Global Recycled Standard</span></div><div class="alt-impact"><span class="tag-medium">Medium impact</span></div><div class="alt-price">$19.99</div><button class="alt-btn">View product</button></div></div>
-                </div>
-                <div class="dots"><span class="d on"></span><span class="d"></span><span class="d"></span></div>
+                <div class="alt-scroll" id="r-alternatives"><div class="empty"><div class="ei">🌱</div><p>Alternatives loaded from database.</p></div></div>
               </div>
             </div>
-
-            <!-- Motivational -->
             <div class="motive">
               <div style="font-size:2.5rem;margin-bottom:.35rem">🌱</div>
               <h4>Small choices, Big impact.</h4>
               <p>Every sustainable action you take makes a difference.</p>
-              <div style="font-size:1rem;margin-top:.3rem;color:var(--green)">💚</div>
-            </div>
-
-            <!-- Thrifting -->
-            <div class="card">
-              <div class="card-hd"><h3><span class="ic">💜</span> Want to Try Thrifting?</h3><a href="#" onclick="navigateTo('sell');return false">Explore more platforms →</a></div>
-              <div class="card-bd">
-                <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:.5rem;font-style:italic">Great finds. Lower impact. Unique style.</div>
-                <div class="alt-scroll">
-                  <div class="thrift-card"><div class="thrift-img">👕</div><div class="thrift-info"><h5>Vintage Striped Tee</h5><div class="thrift-fabric">100% Cotton</div><div class="thrift-price">$8.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-                  <div class="thrift-card"><div class="thrift-img">🧥</div><div class="thrift-info"><h5>Denim Jacket</h5><div class="thrift-fabric">100% Cotton</div><div class="thrift-price">$15.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-                  <div class="thrift-card"><div class="thrift-img">👗</div><div class="thrift-info"><h5>Floral Midi Dress</h5><div class="thrift-fabric">100% Viscose</div><div class="thrift-price">$12.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-                  <div class="thrift-card"><div class="thrift-img">🧶</div><div class="thrift-info"><h5>Chunky Knit Sweater</h5><div class="thrift-fabric">65% Wool, 35% Nylon</div><div class="thrift-price">$18.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-                </div>
-                <div class="dots"><span class="d on"></span><span class="d"></span><span class="d"></span><span class="d"></span></div>
-              </div>
             </div>
           </div>
-
-          <!-- Right Column: Rewards + Sell CTA -->
           <div>
             <div class="rw-panel">
               <div class="rw-head"><span class="ri">🏆</span><h3>Your Rewards</h3></div>
-              <div class="rw-pts"><div class="rv" id="rw-total">1,250</div><div class="rl">Eco Points</div></div>
-              <div class="rw-next">Next milestone: 1,500 points</div>
+              <div class="rw-pts"><div class="rv" id="rw-total">0</div><div class="rl">Eco Points</div></div>
+              <div class="rw-next">Next milestone: 100 points</div>
               <div class="rw-stitle">Earn More Points</div>
               <div class="rw-row"><span>✅ View low-impact product</span><span>+10</span></div>
               <div class="rw-row"><span>✅ Choose verified alternative</span><span>+25</span></div>
               <div class="rw-row"><span>👕 Log a rewear</span><span>+15</span></div>
               <div class="rw-row"><span>🎁 Log a donation</span><span>+20</span></div>
-              <div class="rw-row"><span>🧵 Log a repair</span><span>+20</span></div>
-              <div class="rw-row"><span>♻️ Log a recycle</span><span>+15</span></div>
               <button class="rw-all" onclick="navigateTo('rewards')">View all rewards</button>
-            </div>
-            <div class="sell-cta">
-              <h4>Give clothes a second life.</h4>
-              <p>Thrifting reduces waste and helps build a more sustainable fashion future.</p>
-              <div style="font-size:1.2rem;margin-top:.3rem">💚</div>
             </div>
           </div>
         </div>
@@ -540,6 +511,47 @@ textarea.form-input{min-height:50px;resize:vertical}
 </div>
 <div class="toast" id="toast"></div>
 
+<!-- AI Chatbot Floating Bubble -->
+<style>
+.chatbot-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 16px rgba(34,197,94,.35);z-index:9998;border:none;transition:transform .2s,box-shadow .2s}
+.chatbot-fab:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(34,197,94,.45)}
+.chatbot-fab.open{transform:rotate(45deg)}
+.chatbot-panel{position:fixed;bottom:92px;right:24px;width:370px;max-height:500px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:9998;display:none;flex-direction:column;overflow:hidden}
+.chatbot-panel.open{display:flex}
+.chatbot-hd{padding:.65rem .85rem;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;display:flex;align-items:center;justify-content:space-between}
+.chatbot-hd h3{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:.35rem}
+.chatbot-hd .status{font-size:.6rem;opacity:.8}
+.chatbot-msgs{flex:1;overflow-y:auto;padding:.65rem;display:flex;flex-direction:column;gap:.45rem;min-height:250px;max-height:350px}
+.chatbot-msg{max-width:85%;padding:.45rem .65rem;border-radius:var(--radius-sm);font-size:.78rem;line-height:1.5}
+.chatbot-msg.bot{align-self:flex-start;background:var(--bg);color:var(--text);border-bottom-left-radius:4px}
+.chatbot-msg.bot b{font-weight:600;color:var(--text)}
+.chatbot-msg.bot i{font-style:italic;color:var(--text-dim)}
+.chatbot-msg.user{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:4px}
+.chatbot-msg .typing{display:inline-flex;gap:3px}.chatbot-msg .typing span{width:6px;height:6px;background:var(--text-muted);border-radius:50%;animation:blink 1.4s infinite both}
+.chatbot-msg .typing span:nth-child(2){animation-delay:.2s}.chatbot-msg .typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.chatbot-input{display:flex;gap:.35rem;padding:.5rem .65rem;border-top:1px solid var(--border)}
+.chatbot-input input{flex:1;border:1px solid var(--border);border-radius:var(--radius-xs);padding:.4rem .6rem;font-size:.78rem;outline:none}
+.chatbot-input input:focus{border-color:var(--green)}
+.chatbot-input button{background:var(--green);color:#fff;border:none;border-radius:var(--radius-xs);padding:.4rem .7rem;font-size:.78rem;font-weight:600;cursor:pointer}
+.chatbot-input button:hover{background:var(--green-dark)}
+</style>
+
+<button class="chatbot-fab" id="chatbot-fab" aria-label="Open AI Chat">💬</button>
+<div class="chatbot-panel" id="chatbot-panel">
+  <div class="chatbot-hd">
+    <h3>🌿 EcoPulse AI</h3>
+    <span class="status">● Online</span>
+  </div>
+  <div class="chatbot-msgs" id="chatbot-msgs">
+    <div class="chatbot-msg bot">Hi! Ask me anything about fabrics, sustainability, certifications, or the product you're viewing.</div>
+  </div>
+  <div class="chatbot-input">
+    <input id="chatbot-input" placeholder="Ask about materials, health risks..." aria-label="Chat message">
+    <button id="chatbot-send">Send</button>
+  </div>
+</div>
+
 <script>
 var analysisHistory=[],myListings=[],chatMessages=[],uploadedImages=[];
 var userId='user-'+Math.random().toString(36).substr(2,6);
@@ -569,16 +581,23 @@ fetch('/api/rewards/'+userId).then(function(r){return r.json()}).then(function(d
   if(d.history&&d.history.length){document.getElementById('rw-actions').textContent=d.history.length;renderRewardHistory(d.history)}
 }).catch(function(){});
 
-// AUTO-LOAD from extension: check for ?analysis= query param
+// AUTO-LOAD from extension: read product data from URL params and call AI
 (function(){
   var params=new URLSearchParams(window.location.search);
-  var analysisUrl=params.get('analysis');
-  if(analysisUrl){
+  var productName=params.get('productName');
+  var fabric=params.get('fabric');
+  console.log('[EcoPulse] URL params — productName:', productName, 'fabric:', fabric);
+  if(productName&&fabric){
+    // We have product data from the extension — auto-analyze with AI
     navigateTo('analyze');
-    fetch('/api/analysis/'+encodeURIComponent(analysisUrl))
-      .then(function(r){if(!r.ok)throw new Error('Not found');return r.json()})
-      .then(function(d){showAnalysis(d);addToHistory(d);showToast('Analysis loaded from extension!')})
-      .catch(function(){});
+    document.getElementById('a-name').value=productName;
+    document.getElementById('a-brand').value=params.get('brand')||'Unknown';
+    document.getElementById('a-fabric').value=fabric;
+    document.getElementById('a-claims').value=params.get('claims')||'';
+    document.getElementById('a-certs').value=params.get('certs')||'';
+    document.getElementById('a-imageUrl').value=params.get('imageUrl')||'';
+    // Auto-trigger analysis
+    setTimeout(function(){ document.getElementById('a-go').click(); }, 100);
   }
 })();
 
@@ -586,62 +605,92 @@ fetch('/api/rewards/'+userId).then(function(r){return r.json()}).then(function(d
 document.getElementById('q-go').addEventListener('click',function(){
   var n=document.getElementById('q-name').value.trim(),f=document.getElementById('q-fabric').value.trim();
   if(!n||!f){showToast('Product name and fabric required.');return}
-  navigateTo('analyze');document.getElementById('a-name').value=n;document.getElementById('a-brand').value=document.getElementById('q-brand').value;document.getElementById('a-fabric').value=f;document.getElementById('a-go').click();
+  navigateTo('analyze');document.getElementById('a-name').value=n;document.getElementById('a-brand').value=document.getElementById('q-brand').value;document.getElementById('a-fabric').value=f;document.getElementById('a-imageUrl').value='';document.getElementById('a-go').click();
 });
 
-// ANALYZE
+function setTag(id,lvl){var e=document.getElementById(id);e.textContent=lvl;e.className='mc-tag '+(lvl==='High'?'tag-high':lvl==='Medium'?'tag-medium':'tag-low')}
+
+// ANALYZE — calls AI-powered endpoint
 document.getElementById('a-go').addEventListener('click',async function(){
   var name=document.getElementById('a-name').value.trim(),fabric=document.getElementById('a-fabric').value.trim();
   if(!name||!fabric){showToast('Product name and fabric required.');return}
-  this.textContent='Analyzing...';this.disabled=true;
+  // Show loading, hide empty and results
+  document.getElementById('analysis-empty').style.display='none';
+  document.getElementById('analysis-results').style.display='none';
+  document.getElementById('analysis-loading').style.display='block';
   try{
-    var r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:'https://dashboard',productName:name,brand:document.getElementById('a-brand').value.trim()||'Unknown',fabricCompositionText:fabric,sustainabilityClaims:(document.getElementById('a-claims').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean),certificationMentions:(document.getElementById('a-certs').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean),imageUrl:null})});
+    var brand=document.getElementById('a-brand').value.trim()||'Unknown';
+    var claims=(document.getElementById('a-claims').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean);
+    var certs=(document.getElementById('a-certs').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean);
+    var imageUrl=document.getElementById('a-imageUrl').value.trim()||null;
+    var r=await fetch('/api/ai-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name,brand:brand,fabricCompositionText:fabric,sustainabilityClaims:claims,certificationMentions:certs})});
     var d=await r.json();if(d.error)throw new Error(d.error);
-    showAnalysis(d);addToHistory(d);showToast('Analysis complete!');
-  }catch(e){showToast('Error: '+e.message)}
-  this.textContent='Run Full Analysis →';this.disabled=false;
+    d._productName=name;d._brand=brand;d._fabric=fabric;d._imageUrl=imageUrl;
+    document.getElementById('analysis-loading').style.display='none';
+    showAIAnalysis(d);addToAIHistory(d);showToast('AI analysis complete!');
+  }catch(e){
+    document.getElementById('analysis-loading').style.display='none';
+    document.getElementById('analysis-empty').style.display='block';
+    showToast('Error: '+e.message);
+  }
 });
 
-var matImpact={polyester:{co2:9.52,water:71,color:'var(--red)'},nylon:{co2:11.2,water:60,color:'var(--red)'},acrylic:{co2:8.5,water:50,color:'var(--orange)'},spandex:{co2:14.0,water:110,color:'var(--orange)'},elastane:{co2:14.0,water:110,color:'var(--orange)'},cotton:{co2:5.9,water:10000,color:'var(--green)'},silk:{co2:4.0,water:3000,color:'var(--green)'},wool:{co2:7.8,water:6000,color:'var(--orange)'},linen:{co2:1.5,water:700,color:'var(--green)'},hemp:{co2:1.2,water:400,color:'var(--green)'},bamboo:{co2:3.0,water:900,color:'var(--green)'},rayon:{co2:5.5,water:2500,color:'var(--orange)'},viscose:{co2:5.5,water:2500,color:'var(--orange)'},modal:{co2:3.5,water:1500,color:'var(--green)'},lyocell:{co2:2.0,water:800,color:'var(--green)'},tencel:{co2:2.0,water:800,color:'var(--green)'},cashmere:{co2:12.0,water:8000,color:'var(--red)'}};
-var synthSet=new Set(['polyester','nylon','acrylic','spandex','elastane']);
+// No hardcoded matImpact — all data comes from AI
 
-function showAnalysis(d){
+function showAIAnalysis(d){
   document.getElementById('analysis-results').style.display='block';
-  var s=d.score,comps=d.fabricComposition?d.fabricComposition.components:[];
-  document.getElementById('r-product-name').textContent=d.productName+(d.brand!=='Unknown'?' by '+d.brand:'');
-  document.getElementById('r-subtitle').textContent=comps.map(function(c){return c.percentage+'% '+c.material}).join(' · ')||'';
-  // Image
+  var name=d._productName||'Product';var brand=d._brand||'';
+  document.getElementById('r-product-name').textContent=name+(brand&&brand!=='Unknown'?' by '+brand:'');
+  document.getElementById('r-subtitle').textContent=d._fabric||d.materials.map(function(m){return m.percentage+'% '+m.material}).join(' · ');
+  // Product image from extension
   var imgEl=document.getElementById('r-img'),fallback=document.getElementById('r-img-fallback');
-  if(d.imageUrl){imgEl.src=d.imageUrl;imgEl.style.display='block';fallback.style.display='none'}
+  if(d._imageUrl){imgEl.src=d._imageUrl;imgEl.style.display='block';fallback.style.display='none'}
   else{imgEl.style.display='none';fallback.style.display='block'}
   var imp=document.getElementById('r-impact');
-  if(s.overallIndicator==='green'){imp.textContent='🌿 Low overall impact';imp.className='impact-badge impact-low'}
+  if(d.overall_indicator==='green'){imp.textContent='🌿 Low overall impact';imp.className='impact-badge impact-low'}
   else{imp.textContent='🔥 High overall impact';imp.className='impact-badge impact-high'}
-  var tCO2=0,tW=0,synPct=0;
-  comps.forEach(function(c){var k=c.material.toLowerCase(),m=matImpact[k]||{co2:5,water:1000};tCO2+=m.co2*(c.percentage/100);tW+=m.water*(c.percentage/100);if(synthSet.has(k))synPct+=c.percentage});
-  document.getElementById('mc-carbon').textContent=tCO2.toFixed(2)+' kg';document.getElementById('mc-water').textContent=tW.toFixed(2)+' L';
-  document.getElementById('mc-health').textContent=s.health>=60?'Low':s.health>=40?'Medium':'High';
-  document.getElementById('mc-health-sub').textContent=synPct>0?synPct+'% synthetic blend':'natural fibers';
-  document.getElementById('mc-synth').textContent=synPct+'%';
-  setTag('mc-carbon-tag',tCO2>7?'High':tCO2>4?'Medium':'Low');setTag('mc-water-tag',tW>5000?'High':tW>1000?'Medium':'Low');
-  setTag('mc-health-tag',s.health>=60?'Low':s.health>=40?'Medium':'High');setTag('mc-synth-tag',synPct>70?'High':synPct>30?'Medium':'Low');
-  // Materials
-  var mh='';comps.forEach(function(c){var k=c.material.toLowerCase(),m=matImpact[k]||{co2:5,water:1000,color:'var(--text-muted)'};mh+='<div class="mat-item"><div class="mat-name">'+c.material+'</div><div class="mat-meta">'+m.co2+' kg CO₂/kg · '+m.water+' L/kg</div><div class="mat-bar-row"><div class="mat-bar"><div class="mat-fill" style="width:'+c.percentage+'%;background:'+m.color+'"></div></div><span class="mat-pct">'+c.percentage+'%</span></div></div>'});
-  mh+='<div class="mat-note">CO₂ and water usage are weighted by the percentage of each material.</div>';
+  // Metrics from AI
+  document.getElementById('mc-carbon').textContent=d.total_co2_kg.toFixed(2)+' kg';
+  document.getElementById('mc-water').textContent=d.total_water_liters.toFixed(2)+' L';
+  document.getElementById('mc-health').textContent=d.health_score>=60?'Low':d.health_score>=40?'Medium':'High';
+  document.getElementById('mc-health-sub').textContent=d.synthetic_percentage>0?d.synthetic_percentage+'% synthetic blend':'natural fibers';
+  document.getElementById('mc-synth').textContent=d.synthetic_percentage+'%';
+  setTag('mc-carbon-tag',d.total_co2_kg>7?'High':d.total_co2_kg>4?'Medium':'Low');
+  setTag('mc-water-tag',d.total_water_liters>5000?'High':d.total_water_liters>1000?'Medium':'Low');
+  setTag('mc-health-tag',d.health_score>=60?'Low':d.health_score>=40?'Medium':'High');
+  setTag('mc-synth-tag',d.synthetic_percentage>70?'High':d.synthetic_percentage>30?'Medium':'Low');
+  // Materials from AI
+  var mh='';d.materials.forEach(function(m){
+    var color=m.is_synthetic?'var(--red)':'var(--green)';
+    mh+='<div class="mat-item"><div class="mat-name">'+m.material+(m.qualifier?' ('+m.qualifier+')':'')+'</div>';
+    mh+='<div class="mat-meta">'+m.co2_per_kg+' kg CO₂/kg · '+m.water_per_kg+' L/kg — '+m.environmental_impact+'</div>';
+    mh+='<div class="mat-bar-row"><div class="mat-bar"><div class="mat-fill" style="width:'+m.percentage+'%;background:'+color+'"></div></div><span class="mat-pct">'+m.percentage+'%</span></div></div>';
+  });
+  mh+='<div class="mat-note">All impact data generated by AI analysis. CO₂ and water usage are weighted by percentage.</div>';
   document.getElementById('r-materials').innerHTML=mh;
-  // Health
-  var rh='';if(d.chemicalRisks&&d.chemicalRisks.length)d.chemicalRisks.forEach(function(cr){var c=cr.riskLevel==='high'?'r':'o',i=cr.riskLevel==='high'?'🔴':'🟠';rh+='<div class="risk-item"><div class="risk-icon '+c+'">'+i+'</div><div><b>'+cr.substance+'</b> — '+cr.healthEffects.join(', ')+'</div></div>'});
-  if(synPct>=80)rh+='<div class="risk-item"><div class="risk-icon r">🔴</div><div><b>Poor breathability</b> — '+synPct+'% synthetic blends reduce airflow, creating conditions for bacterial and fungal growth with extended wear.</div></div>';
+  // Update material explanation from AI
+  var matExplain=document.querySelector('.mat-explain');
+  if(matExplain){matExplain.innerHTML='<h4>💡 What does this mean?</h4><p>'+d.material_explanation+'</p><div style="margin-top:.6rem;text-align:center;font-size:3rem">🌍</div>'}
+  // Health risks from AI
+  var rh='';if(d.health_risks&&d.health_risks.length){d.health_risks.forEach(function(hr){
+    var c=hr.severity==='high'?'r':'o',i=hr.severity==='high'?'🔴':'🟠';
+    rh+='<div class="risk-item"><div class="risk-icon '+c+'">'+i+'</div><div><b>'+hr.title+'</b> — '+hr.description+'</div></div>';
+  })}
   if(!rh)rh='<div style="color:var(--text-muted);font-size:.78rem">No significant health risks identified.</div>';
   document.getElementById('r-health-risks').innerHTML=rh;
-  var bio=synPct>80?'0–20 years+':synPct>50?'5–15 years':synPct>20?'1–5 years':'6 months–2 years';
-  var bpos=synPct>80?'5%':synPct>50?'25%':synPct>20?'50%':'80%';
-  document.getElementById('r-bio-val').textContent=bio;document.querySelector('.bio-dot').style.right=bpos;
+  // Biodegradability from AI
+  document.getElementById('r-bio-val').textContent=d.biodegradability_estimate;
+  document.querySelector('.bio-dot').style.right=(100-d.biodegradability_position)+'%';
+  // Update health explanation
+  var whyBox=document.querySelector('.why-box');
+  if(whyBox){whyBox.innerHTML='<div class="wi">💬</div><div><h5>Why it matters</h5><p>'+d.health_explanation+'</p></div>'}
   document.getElementById('analysis-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function setTag(id,lvl){var e=document.getElementById(id);e.textContent=lvl;e.className='mc-tag '+(lvl==='High'?'tag-high':lvl==='Medium'?'tag-medium':'tag-low')}
-function addToHistory(d){
-  analysisHistory.unshift(d);document.getElementById('stat-analyzed').textContent=analysisHistory.length;
+
+function addToAIHistory(d){
+  var name=d._productName||'Product';var brand=d._brand||'';
+  var entry={productName:name,brand:brand,score:{environmental:d.environmental_score,health:d.health_score,greenwashing:d.greenwashing_score,overallIndicator:d.overall_indicator}};
+  analysisHistory.unshift(entry);document.getElementById('stat-analyzed').textContent=analysisHistory.length;
   var sc=analysisHistory.map(function(a){return a.score.environmental});document.getElementById('stat-avg').textContent=Math.round(sc.reduce(function(a,b){return a+b},0)/sc.length);
   var h=document.getElementById('history-bd'),html='';
   analysisHistory.slice(0,8).forEach(function(i){var c=i.score.overallIndicator==='green'?'var(--green)':'var(--red)',bg=i.score.overallIndicator==='green'?'var(--green-pale)':'var(--red-pale)';html+='<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--border-light);font-size:.78rem"><span style="display:inline-flex;width:26px;height:26px;border-radius:50%;background:'+bg+';align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:'+c+'">'+i.score.environmental+'</span><span style="flex:1">'+i.productName+'</span><span style="color:var(--text-muted);font-size:.68rem">'+(i.brand||'')+'</span></div>'});
@@ -698,6 +747,72 @@ function renderRewardHistory(ev){var el=document.getElementById('rw-history');if
 document.getElementById('loc-go').addEventListener('click',findLoc);
 async function findLoc(){var lat=document.getElementById('loc-lat').value,lng=document.getElementById('loc-lng').value,rad=document.getElementById('loc-radius').value||50;var el=document.getElementById('loc-results');el.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--text-dim)">Searching...</div>';
   try{var r=await fetch('/api/locations?lat='+lat+'&lng='+lng+'&radius='+rad);var d=await r.json();if(!d.length){el.innerHTML='<div class="empty"><div class="ei">📍</div><p>No locations found.</p></div>';return}var h='';d.forEach(function(l){var tc=l.type==='donation'?'background:var(--green-pale);color:var(--green-dark)':'background:var(--purple-pale);color:var(--purple)';var dir='https://www.google.com/maps/dir/?api=1&destination='+l.latitude+','+l.longitude;h+='<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem;margin-bottom:.4rem"><div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.15rem"><span style="font-weight:600;font-size:.8rem">'+l.name+'</span><span style="font-size:.6rem;padding:.08rem .35rem;border-radius:5px;font-weight:600;'+tc+'">'+l.type+'</span></div><div style="font-size:.72rem;color:var(--text-dim)">'+l.address+'</div><div style="font-size:.65rem;color:var(--text-muted);margin-top:.1rem">🕐 '+l.operatingHours+'</div><a href="'+dir+'" target="_blank" rel="noopener" style="font-size:.7rem;display:inline-block;margin-top:.2rem">Get Directions →</a></div>'});el.innerHTML=h}catch(e){el.innerHTML='<div class="empty"><div class="ei">⚠️</div><p>Error loading locations.</p></div>'}}
+
+// CHATBOT BUBBLE
+(function(){
+  var fab=document.getElementById('chatbot-fab'),panel=document.getElementById('chatbot-panel');
+  var msgs=document.getElementById('chatbot-msgs'),inp=document.getElementById('chatbot-input');
+  var sendBtn=document.getElementById('chatbot-send');
+  var chatHistory=[];
+  fab.addEventListener('click',function(){
+    var isOpen=panel.classList.toggle('open');
+    fab.classList.toggle('open',isOpen);
+    fab.textContent=isOpen?'✕':'💬';
+    if(isOpen)inp.focus();
+  });
+  sendBtn.addEventListener('click',sendBotMsg);
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')sendBotMsg()});
+  function sendBotMsg(){
+    var m=inp.value.trim();if(!m)return;inp.value='';
+    appendBotMsg('user',m);
+    chatHistory.push({role:'user',content:m});
+    // Show typing indicator
+    var typingEl=document.createElement('div');typingEl.className='chatbot-msg bot';typingEl.id='chatbot-typing';
+    typingEl.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+    msgs.appendChild(typingEl);msgs.scrollTop=msgs.scrollHeight;
+    fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:userId,message:m,conversationHistory:chatHistory,productContext:getCurrentProductContext()})})
+      .then(function(r){return r.json()})
+      .then(function(d){
+        var t=document.getElementById('chatbot-typing');if(t)t.remove();
+        var reply=d.message||d.error||'Sorry, I could not process that.';
+        chatHistory.push({role:'assistant',content:reply});
+        appendBotMsg('bot',reply);
+      })
+      .catch(function(){
+        var t=document.getElementById('chatbot-typing');if(t)t.remove();
+        appendBotMsg('bot','Sorry, something went wrong. Please try again.');
+      });
+  }
+  function getCurrentProductContext(){
+    var name=document.getElementById('a-name').value;
+    var fabric=document.getElementById('a-fabric').value;
+    var brand=document.getElementById('a-brand').value;
+    if(!name||!fabric)return null;
+    return 'Product: '+name+', Brand: '+(brand||'Unknown')+', Fabric: '+fabric;
+  }
+  function appendBotMsg(role,text){
+    var div=document.createElement('div');div.className='chatbot-msg '+role;
+    if(role==='bot'){div.innerHTML=formatMarkdown(text)}else{div.textContent=text}
+    msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  }
+  function formatMarkdown(t){
+    // Convert markdown to HTML
+    t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // Bold
+    t=t.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+    // Italic
+    t=t.replace(/\*(.+?)\*/g,'<i>$1</i>');
+    // Numbered lists
+    t=t.replace(/^(\d+)\.\s+/gm,'<br>$1. ');
+    // Bullet lists
+    t=t.replace(/^[-•]\s+/gm,'<br>• ');
+    // Line breaks
+    t=t.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    // Clean leading <br>
+    t=t.replace(/^(<br>)+/,'');
+    return t;
+  }
+})();
 </script>
 </body>
 </html>
