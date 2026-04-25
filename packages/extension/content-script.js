@@ -427,20 +427,20 @@
         '<div id="ep-form">' +
           '<div class="ep-hint" id="ep-hint"></div>' +
           '<label class="ep-label">Product Name</label>' +
-          '<input class="ep-input" id="ep-name" placeholder="e.g. Slim Fit Crop Tank Top">' +
+          '<div class="ep-input-wrap"><span class="ep-input-icon" style="background:#ede9fe">👕</span><input class="ep-input" id="ep-name" placeholder="e.g. Slim Fit Crop Tank Top"></div>' +
           '<label class="ep-label">Brand</label>' +
-          '<input class="ep-input" id="ep-brand" placeholder="e.g. SHEIN, H&M, Zara">' +
+          '<div class="ep-input-wrap"><span class="ep-input-icon" style="background:#fce7f3">💎</span><input class="ep-input" id="ep-brand" placeholder="e.g. SHEIN, H&M, Zara"></div>' +
           '<label class="ep-label">Fabric Composition</label>' +
-          '<textarea class="ep-textarea" id="ep-fabric" placeholder="e.g. 95% Polyester, 5% Spandex"></textarea>' +
+          '<div class="ep-input-wrap"><span class="ep-input-icon" style="background:#e0f2fe">#</span><textarea class="ep-textarea" id="ep-fabric" placeholder="e.g. 95% Polyester, 5% Spandex"></textarea></div>' +
           '<div class="ep-small">Paste from the product page if not auto-filled</div>' +
           '<label class="ep-label">Sustainability Claims (optional)</label>' +
-          '<input class="ep-input" id="ep-claims" placeholder="e.g. eco-friendly, recycled">' +
+          '<div class="ep-input-wrap"><span class="ep-input-icon" style="background:#f0fdf4">🌿</span><input class="ep-input" id="ep-claims" placeholder="e.g. eco-friendly, recycled"></div>' +
           '<label class="ep-label">Certifications (optional)</label>' +
-          '<input class="ep-input" id="ep-certs" placeholder="e.g. GOTS, OEKO-TEX">' +
-          '<button class="ep-btn" id="ep-analyze">Analyze</button>' +
-          '<button class="ep-btn ep-btn-secondary" id="ep-rescan" style="margin-top:6px">🔄 Re-scan Page</button>' +
+          '<div class="ep-input-wrap"><span class="ep-input-icon" style="background:#f0fdf4">🛡</span><input class="ep-input" id="ep-certs" placeholder="e.g. GOTS, OEKO-TEX"></div>' +
+          '<button class="ep-btn" id="ep-analyze">🔍 Analyze</button>' +
+          '<button class="ep-btn ep-btn-secondary" id="ep-rescan">🔄 Re-scan Page</button>' +
         '</div>' +
-        '<div id="ep-loading" style="display:none"><div class="ep-loading"><div class="ep-spinner"></div><p style="margin-top:8px;font-size:.85rem">Analyzing…</p></div></div>' +
+        '<div id="ep-loading" style="display:none"><div class="ep-loading"><div class="ep-spinner"></div><p style="margin-top:10px;font-size:.82rem">Analyzing…</p></div></div>' +
         '<div id="ep-result" style="display:none"></div>' +
       '</div>';
   }
@@ -560,21 +560,19 @@
     // Get the extracted image URL
     var extractedData = doExtract();
 
-    fetch(API_BASE + "/api/analyze", {
+    fetch(API_BASE + "/api/ai-analyze", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        url: location.href,
         productName: name,
         brand: (document.getElementById("ep-brand").value || "").trim() || "Unknown",
         fabricCompositionText: fabric,
         sustainabilityClaims: claims ? claims.split(",").map(function(s){return s.trim();}).filter(Boolean) : [],
         certificationMentions: certs ? certs.split(",").map(function(s){return s.trim();}).filter(Boolean) : [],
-        imageUrl: extractedData.imageUrl || null,
       }),
     })
     .then(function(res) { if (!res.ok) throw new Error("API error: " + res.status); return res.json(); })
-    .then(showResults)
+    .then(function(aiData) { showAIResults(aiData, name, fabric); })
     .catch(function(err) { showError(err.message || "Failed to connect. Is the server running on localhost:3000?"); });
   }
 
@@ -584,14 +582,14 @@
     var s = analysis.score, ind = s.overallIndicator;
     var html =
       '<div class="ep-scores">' +
-        '<div class="ep-score-item ' + sc(s.environmental) + '"><div class="ep-score-lbl">Environ.</div><div class="ep-score-val">' + s.environmental + '</div></div>' +
-        '<div class="ep-score-item ' + sc(s.health) + '"><div class="ep-score-lbl">Health</div><div class="ep-score-val">' + s.health + '</div></div>' +
-        '<div class="ep-score-item ' + sc(s.greenwashing) + '"><div class="ep-score-lbl">Greenwash</div><div class="ep-score-val">' + s.greenwashing + '</div></div>' +
+        '<div class="ep-score-item ep-score-env"><div class="ep-score-icon">🌿</div><div class="ep-score-lbl">Environ.</div><div class="ep-score-val">' + s.environmental + '</div></div>' +
+        '<div class="ep-score-item ep-score-health"><div class="ep-score-icon">💜</div><div class="ep-score-lbl">Health</div><div class="ep-score-val">' + s.health + '</div></div>' +
+        '<div class="ep-score-item ep-score-gw"><div class="ep-score-icon">🌱</div><div class="ep-score-lbl">Greenwash</div><div class="ep-score-val">' + s.greenwashing + '</div></div>' +
       '</div>' +
       '<div class="ep-indicator ' + ind + '">' + (ind === "green" ? "✓ Sustainable" : "⚠ Needs Improvement") + '</div>';
 
     if (analysis.greenwashingSignals && analysis.greenwashingSignals.length > 0) {
-      html += '<div class="ep-signals"><h4>Greenwashing Alerts</h4>';
+      html += '<div class="ep-signals"><h4>⚠️ Greenwashing Alerts</h4>';
       for (var i = 0; i < analysis.greenwashingSignals.length; i++) {
         var sig = analysis.greenwashingSignals[i];
         html += '<div class="ep-signal"><span class="ep-signal-term">&ldquo;' + sig.term + '&rdquo;</span> &mdash; ' + sig.explanation + '</div>';
@@ -600,27 +598,38 @@
     }
 
     if (analysis.fabricComposition && analysis.fabricComposition.components.length > 0) {
-      html += '<div class="ep-section"><h4>Fabric Breakdown</h4>';
+      html += '<div class="ep-section"><h4>🧵 Fabric Breakdown</h4>';
       for (var j = 0; j < analysis.fabricComposition.components.length; j++) {
         var c = analysis.fabricComposition.components[j];
         var label = (c.qualifier ? c.qualifier + " " : "") + c.material;
-        html += '<div style="font-size:.78rem;padding:2px 0">' + c.percentage + '% ' + label + '</div>';
+        html += '<div class="ep-fabric-row"><span class="ep-fabric-pct">' + c.percentage + '%</span><span class="ep-fabric-name">' + label + '</span><div class="ep-fabric-bar"><div class="ep-fabric-fill" style="width:' + c.percentage + '%"></div></div><span class="ep-fabric-pct-end">' + c.percentage + '%</span></div>';
       }
       html += '</div>';
     }
 
     if (analysis.chemicalRisks && analysis.chemicalRisks.length > 0) {
-      html += '<div class="ep-section"><h4>Chemical Risks</h4>';
+      html += '<div class="ep-section"><h4>⚠️ Chemical Risks</h4>';
       for (var k = 0; k < analysis.chemicalRisks.length; k++) {
         var cr = analysis.chemicalRisks[k];
-        html += '<div style="font-size:.75rem;padding:2px 0;color:' + (cr.riskLevel === "high" ? "#ef9a9a" : cr.riskLevel === "medium" ? "#ffb74d" : "#a5d6a7") + '">' +
-          cr.substance + ' (' + cr.riskLevel + ') — ' + cr.healthEffects.join(", ") + '</div>';
+        html += '<div class="ep-chem-item"><b>' + cr.substance + ' (' + cr.riskLevel + ')</b> — ' + cr.healthEffects.join(", ") + '</div>';
       }
       html += '</div>';
     }
 
-    html += '<a class="ep-link" href="' + API_BASE + '?analysis=' + encodeURIComponent(analysis.url) + '" target="_blank">Open Full Dashboard →</a>';
-    html += '<button class="ep-btn ep-btn-secondary" id="ep-reset">Analyze Another</button>';
+    // Pass all product data to dashboard via URL params so AI analysis can run
+    var dashParams = new URLSearchParams();
+    dashParams.set('analysis', analysis.url);
+    dashParams.set('productName', (document.getElementById("ep-name").value || "").trim());
+    dashParams.set('brand', (document.getElementById("ep-brand").value || "").trim() || "Unknown");
+    dashParams.set('fabric', (document.getElementById("ep-fabric").value || "").trim());
+    var claimsVal = (document.getElementById("ep-claims").value || "").trim();
+    var certsVal = (document.getElementById("ep-certs").value || "").trim();
+    if (claimsVal) dashParams.set('claims', claimsVal);
+    if (certsVal) dashParams.set('certs', certsVal);
+    var imgData = doExtract();
+    if (imgData.imageUrl) dashParams.set('imageUrl', imgData.imageUrl);
+    html += '<a class="ep-link" href="' + API_BASE + '?' + dashParams.toString() + '" target="_blank">📊 Open Full Dashboard →</a>';
+    html += '<button class="ep-btn ep-btn-secondary" id="ep-reset">🔄 Analyze Another</button>';
 
     document.getElementById("ep-loading").style.display = "none";
     var resultEl = document.getElementById("ep-result");
@@ -633,6 +642,63 @@
     var resultEl = document.getElementById("ep-result");
     resultEl.innerHTML = '<div class="ep-error-box">' + msg + '</div>' +
       '<button class="ep-btn" style="margin-top:8px" id="ep-retry">Try Again</button>';
+    resultEl.style.display = "block";
+  }
+
+  function showAIResults(d, name, fabric) {
+    var ind = d.overall_indicator;
+    var html =
+      '<div class="ep-scores">' +
+        '<div class="ep-score-item ' + (d.environmental_score >= 50 ? 'ep-good' : 'ep-bad') + '"><div class="ep-score-icon">🌿</div><div class="ep-score-lbl">Environ.</div><div class="ep-score-val">' + d.environmental_score + '</div></div>' +
+        '<div class="ep-score-item ' + (d.health_score >= 50 ? 'ep-good' : 'ep-bad') + '"><div class="ep-score-icon">💜</div><div class="ep-score-lbl">Health</div><div class="ep-score-val">' + d.health_score + '</div></div>' +
+        '<div class="ep-score-item ' + (d.greenwashing_score >= 50 ? 'ep-good' : 'ep-bad') + '"><div class="ep-score-icon">🧪</div><div class="ep-score-lbl">Greenwash</div><div class="ep-score-val">' + d.greenwashing_score + '</div></div>' +
+      '</div>' +
+      '<div class="ep-indicator ' + ind + '">' + (ind === "green" ? "✓ Sustainable" : "⚠ Needs Improvement") + '</div>';
+
+    if (d.greenwashing_signals && d.greenwashing_signals.length > 0) {
+      html += '<div class="ep-signals"><h4>⚠️ Greenwashing Alerts</h4>';
+      for (var i = 0; i < d.greenwashing_signals.length; i++) {
+        var sig = d.greenwashing_signals[i];
+        html += '<div class="ep-signal"><span class="ep-signal-term">&ldquo;' + sig.term + '&rdquo;</span> &mdash; ' + sig.explanation + '</div>';
+      }
+      html += '</div>';
+    }
+
+    if (d.materials && d.materials.length > 0) {
+      html += '<div class="ep-section"><h4>🧵 Fabric Breakdown</h4>';
+      for (var j = 0; j < d.materials.length; j++) {
+        var m = d.materials[j];
+        var label = (m.qualifier ? m.qualifier + ' ' : '') + m.material;
+        html += '<div class="ep-fabric-row"><span class="ep-fabric-pct">' + m.percentage + '%</span><span class="ep-fabric-name">' + label + '</span><div class="ep-fabric-bar"><div class="ep-fabric-fill" style="width:' + m.percentage + '%"></div></div><span class="ep-fabric-pct-end">' + m.percentage + '%</span></div>';
+      }
+      html += '</div>';
+    }
+
+    if (d.chemical_risks && d.chemical_risks.length > 0) {
+      html += '<div class="ep-section"><h4>⚠️ Chemical Risks</h4>';
+      for (var k = 0; k < d.chemical_risks.length; k++) {
+        var cr = d.chemical_risks[k];
+        html += '<div class="ep-chem-item"><b>' + cr.substance + ' (' + cr.risk_level + ')</b> — ' + cr.health_effects.join(', ') + '</div>';
+      }
+      html += '</div>';
+    }
+
+    var dashParams = new URLSearchParams();
+    dashParams.set('productName', name);
+    dashParams.set('brand', (document.getElementById("ep-brand").value || "").trim() || "Unknown");
+    dashParams.set('fabric', fabric);
+    var claimsVal = (document.getElementById("ep-claims").value || "").trim();
+    var certsVal = (document.getElementById("ep-certs").value || "").trim();
+    if (claimsVal) dashParams.set('claims', claimsVal);
+    if (certsVal) dashParams.set('certs', certsVal);
+    var imgData = doExtract();
+    if (imgData.imageUrl) dashParams.set('imageUrl', imgData.imageUrl);
+    html += '<a class="ep-link" href="' + API_BASE + '?' + dashParams.toString() + '" target="_blank">📊 Open Full Dashboard →</a>';
+    html += '<button class="ep-btn ep-btn-secondary" id="ep-reset">🔄 Analyze Another</button>';
+
+    document.getElementById("ep-loading").style.display = "none";
+    var resultEl = document.getElementById("ep-result");
+    resultEl.innerHTML = html;
     resultEl.style.display = "block";
   }
 

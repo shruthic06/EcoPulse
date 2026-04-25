@@ -17,7 +17,7 @@
   --text:#1e293b;--text-dim:#64748b;--text-muted:#94a3b8;
   --radius:16px;--radius-sm:12px;--radius-xs:8px;
 }
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;margin:0;font-size:32px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;margin:0}
 a{color:var(--purple);text-decoration:none}
 a:hover{text-decoration:underline}
 button{font-family:inherit;cursor:pointer}
@@ -178,7 +178,7 @@ input,textarea,select{font-family:inherit}
 .sell-cta p{font-size:.7rem;color:var(--text-dim);line-height:1.5}
 
 /* MOTIVE */
-.motive{border-radius:var(--radius);padding:1rem;text-align:center;margin-bottom:.85rem}
+.motive{background:var(--green-pale);border-radius:var(--radius);padding:1rem;text-align:center;border:1px solid var(--green-light);margin-bottom:.85rem}
 .motive h4{font-size:.92rem;font-weight:700;margin-bottom:.15rem}
 .motive p{font-size:.72rem;color:var(--text-dim);line-height:1.5}
 
@@ -237,15 +237,19 @@ textarea.form-input{min-height:50px;resize:vertical}
   <div class="sidebar-nav">
     <div class="nav-section">
       <div class="nav-label">Main</div>
-      <div class="nav-item active" data-page="analyze" role="button" tabindex="0">Analyze</div>
+      <div class="nav-item" data-page="dashboard" role="button" tabindex="0"><span class="ni">📊</span>Dashboard</div>
+      <div class="nav-item active" data-page="analyze" role="button" tabindex="0"><span class="ni">🔍</span>Analyze</div>
+      <div class="nav-item" data-page="alternatives" role="button" tabindex="0"><span class="ni">🌱</span>Alternatives</div>
+      <div class="nav-item" data-page="chat" role="button" tabindex="0"><span class="ni">💬</span>AI Chat</div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Marketplace</div>
-      <div class="nav-item" data-page="sell" role="button" tabindex="0">Sell Clothes</div>
+      <div class="nav-item" data-page="sell" role="button" tabindex="0"><span class="ni">👗</span>Sell Clothes<span class="nav-badge">New</span></div>
     </div>
     <div class="nav-section">
       <div class="nav-label">Sustainability</div>
-      <div class="nav-item" data-page="rewards" role="button" tabindex="0">Rewards</div>
+      <div class="nav-item" data-page="rewards" role="button" tabindex="0"><span class="ni">🏆</span>Rewards</div>
+      <div class="nav-item" data-page="locations" role="button" tabindex="0"><span class="ni">📍</span>Locations</div>
     </div>
   </div>
 </nav>
@@ -255,38 +259,8 @@ textarea.form-input{min-height:50px;resize:vertical}
   <header class="topbar">
     <div class="topbar-left"><button class="hamburger" aria-label="Menu">☰</button></div>
     <div class="topbar-right">
-      <div style="position:relative">
-        <div id="eco-pts-btn" onclick="toggleRewardsDropdown()" style="display:flex;align-items:center;gap:.5rem;background:var(--green-pale);padding:.4rem .85rem;border-radius:22px;cursor:pointer;user-select:none;border:1px solid var(--green-light)">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v2h2a1 1 0 011 1v2a4 4 0 01-3 3.87V13a5 5 0 01-4 4.9V20h3v2H7v-2h3v-2.1A5 5 0 016 13v-1.13A4 4 0 013 8V6a1 1 0 011-1h2V3z" fill="#C8A415"/><path d="M8 5v8a4 4 0 008 0V5H8z" fill="#F5C518"/><path d="M4 7h2v2.5A2 2 0 014 7.5V7zm14 0h2v.5a2 2 0 01-2 2V7z" fill="#C8A415"/><rect x="9" y="17" width="6" height="3" rx="1" fill="#C8A415"/></svg>
-          <div style="display:flex;flex-direction:column;line-height:1.15">
-            <span style="font-size:.85rem;font-weight:800;color:var(--green-dark)" id="pts-val">1,250</span>
-            <span style="font-size:.6rem;font-weight:600;color:var(--green-dark);opacity:.7">Eco Points</span>
-          </div>
-          <span style="font-size:.5rem;color:var(--green-dark);opacity:.5;margin-left:.1rem">&#9662;</span>
-        </div>
-        <!-- Rewards Dropdown -->
-        <div id="rewards-dropdown" style="display:none;position:absolute;top:calc(100% + 8px);right:0;width:340px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.1);z-index:200;overflow:hidden">
-          <div style="padding:1rem 1.1rem;background:#e8f5e9">
-            <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.65rem">
-              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M6 3h12v2h2a1 1 0 011 1v2a4 4 0 01-3 3.87V13a5 5 0 01-4 4.9V20h3v2H7v-2h3v-2.1A5 5 0 016 13v-1.13A4 4 0 013 8V6a1 1 0 011-1h2V3z" fill="#C8A415"/><path d="M8 5v8a4 4 0 008 0V5H8z" fill="#F5C518"/><path d="M4 7h2v2.5A2 2 0 014 7.5V7zm14 0h2v.5a2 2 0 01-2 2V7z" fill="#C8A415"/><rect x="9" y="17" width="6" height="3" rx="1" fill="#C8A415"/></svg>
-              <span style="font-size:1rem;font-weight:700;color:var(--text)">Your Rewards</span>
-            </div>
-            <div style="font-size:2.4rem;font-weight:800;color:var(--green-dark);line-height:1" id="rw-total">1,250</div>
-            <div style="font-size:.88rem;color:var(--green-dark);font-weight:600;margin-top:.15rem">Eco Points</div>
-            <div style="font-size:.72rem;color:var(--text-muted);margin-top:.3rem">Next milestone: 1,500 points</div>
-          </div>
-          <div style="padding:.75rem 1.1rem">
-            <div style="font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--text-dim);margin-bottom:.5rem">Earn More Points</div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.32rem 0;font-size:.74rem"><span style="color:var(--text-dim)">&#10003; View low-impact product</span><span style="color:var(--green-dark);font-weight:600">+10</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.32rem 0;font-size:.74rem"><span style="color:var(--text-dim)">&#10003; Choose verified alternative</span><span style="color:var(--green-dark);font-weight:600">+25</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.32rem 0;font-size:.74rem"><span style="color:var(--text-dim)">&#128085; Log a rewear</span><span style="color:var(--green-dark);font-weight:600">+15</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.32rem 0;font-size:.74rem"><span style="color:var(--text-dim)">&#127873; Log a donation</span><span style="color:var(--green-dark);font-weight:600">+20</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.32rem 0;font-size:.74rem"><span style="color:var(--text-dim)">&#129525; Log a repair</span><span style="color:var(--green-dark);font-weight:600">+20</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:.32rem 0;font-size:.74rem"><span style="color:var(--text-dim)">&#9851; Log a recycle</span><span style="color:var(--green-dark);font-weight:600">+15</span></div>
-            <button onclick="navigateTo('rewards');toggleRewardsDropdown()" style="display:block;width:100%;padding:.5rem;border-radius:var(--radius-xs);background:var(--green);color:#fff;border:none;font-size:.75rem;font-weight:600;margin-top:.6rem;cursor:pointer">View all rewards</button>
-          </div>
-        </div>
-      </div>
+      <div class="eco-pts"><div class="coin">🌿</div><span id="pts-val">1,250</span> Eco Points</div>
+      <div class="notif">🔔<div class="notif-dot"></div></div>
       <div class="avatar">EP</div>
       <span class="avatar-arrow">▾</span>
     </div>
@@ -294,183 +268,180 @@ textarea.form-input{min-height:50px;resize:vertical}
 
   <div class="content">
 
+    <!-- ===== DASHBOARD ===== -->
+    <div class="page" id="page-dashboard">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.65rem;margin-bottom:.85rem">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem"><div style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Products Analyzed</div><div style="font-size:1.4rem;font-weight:700;color:var(--purple)" id="stat-analyzed">0</div></div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem"><div style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Eco Points</div><div style="font-size:1.4rem;font-weight:700;color:var(--green-dark)" id="stat-points">0</div></div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem"><div style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Items Listed</div><div style="font-size:1.4rem;font-weight:700;color:var(--orange)" id="stat-listed">0</div></div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem"><div style="font-size:.6rem;color:var(--text-muted);text-transform:uppercase;font-weight:600">Avg Score</div><div style="font-size:1.4rem;font-weight:700;color:var(--purple)" id="stat-avg">—</div></div>
+      </div>
+      <div class="grid-2">
+        <div class="card"><div class="card-hd"><h3><span class="ic">🔍</span> Quick Analysis</h3></div><div class="card-bd">
+          <div class="form-group"><label>Product Name</label><input class="form-input" id="q-name" placeholder="e.g. Slim Fit Tank Top"></div>
+          <div style="display:flex;gap:.5rem"><div class="form-group" style="flex:1"><label>Brand</label><input class="form-input" id="q-brand" placeholder="e.g. SHEIN"></div><div class="form-group" style="flex:1"><label>Fabric</label><input class="form-input" id="q-fabric" placeholder="95% Polyester, 5% Spandex"></div></div>
+          <button class="btn btn-green btn-lg" id="q-go" style="width:100%">Analyze Product →</button>
+        </div></div>
+        <div class="card"><div class="card-hd"><h3><span class="ic">📋</span> Recent Analyses</h3></div><div class="card-bd" id="history-bd"><div class="empty"><div class="ei">🌿</div><p>No analyses yet.</p></div></div></div>
+      </div>
+    </div>
+
     <!-- ===== ANALYZE PAGE ===== -->
     <div class="page active" id="page-analyze">
 
       <!-- Hidden inputs for analysis API -->
-      <input type="hidden" id="a-name" value="Polyester Blend Garment">
+      <input type="hidden" id="a-name" value="">
       <input type="hidden" id="a-brand" value="">
-      <input type="hidden" id="a-fabric" value="95% Polyester, 5% Elastane">
+      <input type="hidden" id="a-fabric" value="">
       <input type="hidden" id="a-claims" value="">
       <input type="hidden" id="a-certs" value="">
+      <input type="hidden" id="a-imageUrl" value="">
       <button id="a-go" style="display:none"></button>
 
-      <!-- RESULTS -->
-      <div id="analysis-results">
-        <div id="r-health-risks" style="display:none"></div>
+      <!-- LOADING STATE (shown while AI analyzes) -->
+      <div id="analysis-loading" style="display:none;text-align:center;padding:4rem 1rem">
+        <div style="font-size:3rem;margin-bottom:1rem">🔍</div>
+        <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">Analyzing with AI...</h2>
+        <p style="font-size:.82rem;color:var(--text-dim)">Getting environmental and health data from OpenAI. This may take a few seconds.</p>
+        <div style="margin-top:1.5rem;width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin 1s linear infinite;margin-left:auto;margin-right:auto"></div>
+        <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+      </div>
 
-        <!-- ROW 1: Product Info + Overall Score + Biodegradability -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
-          <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;display:flex;gap:1.1rem">
-            <div id="r-img-wrap" style="width:150px;height:180px;border-radius:var(--radius-sm);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden">
-              <img id="r-img" src="" alt="" style="width:100%;height:100%;object-fit:cover;display:none">
-              <svg id="r-img-fallback" width="90" height="110" viewBox="0 0 120 140" fill="none" style="opacity:.45"><path d="M60 10C55 10 48 14 45 20L30 45C28 49 30 52 34 52H42V120C42 124 45 127 49 127H71C75 127 78 124 78 120V52H86C90 52 92 49 90 45L75 20C72 14 65 10 60 10Z" fill="#94a3b8"/></svg>
-            </div>
-            <div style="flex:1;padding-top:.2rem">
-              <h2 id="r-product-name" style="font-size:1.2rem;font-weight:700;margin-bottom:.15rem">Polyester Blend Garment</h2>
-              <div id="r-brand" style="font-size:.8rem;color:var(--text-muted);margin-bottom:.8rem">FastFashion Co.</div>
-              <div style="display:flex;flex-direction:column;gap:.5rem;font-size:.8rem">
-                <div style="display:flex;align-items:center;gap:.5rem"><span style="color:var(--text-muted)">&#x1F9F5;</span><span style="font-weight:600">Material:</span> <span id="r-subtitle" style="color:var(--text-dim)">95% Polyester, 5% Spandex</span></div>
-                <div style="display:flex;align-items:center;gap:.5rem"><span style="color:var(--text-muted)">&#x1F4B2;</span><span style="font-weight:600">Price:</span> <span style="color:var(--text-dim)">$12.99</span></div>
-                <div style="display:flex;align-items:center;gap:.5rem"><span style="color:var(--text-muted)">&#x1F3F7;</span><span style="font-weight:600">Claim:</span> <span id="r-claims-display" style="color:var(--text-dim);font-style:italic">"Eco-friendly"</span></div>
-              </div>
-            </div>
-          </div>
-          <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem;display:flex;align-items:center;gap:1.5rem">
-            <div style="text-align:center;flex-shrink:0">
-              <div style="font-size:.78rem;font-weight:700;color:var(--text);margin-bottom:.6rem">Overall Impact Score</div>
-              <div style="position:relative;width:110px;height:110px;margin:0 auto">
-                <svg width="110" height="110" viewBox="0 0 110 110"><circle cx="55" cy="55" r="46" fill="none" stroke="#e5e7eb" stroke-width="9"/><circle id="score-ring" cx="55" cy="55" r="46" fill="none" stroke="var(--red)" stroke-width="9" stroke-dasharray="289" stroke-dashoffset="168" stroke-linecap="round" transform="rotate(-90 55 55)"/></svg>
-                <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span id="score-num" style="font-size:2.2rem;font-weight:800;color:var(--text)">42</span><span style="font-size:.7rem;color:var(--text-muted)">/100</span></div>
-              </div>
-            </div>
-            <div style="flex:1">
-              <div id="score-label" style="font-size:1.15rem;font-weight:700;color:var(--red);margin-bottom:.35rem">High Impact</div>
-              <p id="score-desc" style="font-size:.78rem;color:var(--text-dim);line-height:1.55">This item has high environmental impact and limited health transparency. Consider safer alternatives.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- ROW 2+3: Categories + Why it matters (left) | Better Choices (right) -->
-        <div style="display:grid;grid-template-columns:1fr 300px;gap:1rem;margin-bottom:1rem">
-          <div>
-            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin-bottom:1rem">
-              <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center">
-                <div style="width:46px;height:46px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;margin:0 auto .55rem;font-size:1.2rem">&#x1F30D;</div>
-                <div style="font-size:.75rem;font-weight:600;margin-bottom:.3rem">Environmental Impact</div>
-                <div id="cat-env-tag" style="font-size:.75rem;font-weight:700;color:var(--red);margin-bottom:.45rem">High</div>
-                <div id="cat-env-desc" style="font-size:.68rem;color:var(--text-dim);line-height:1.45">Polyester is fossil-based, sheds microfibers, and is hard to recycle.</div>
-              </div>
-              <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center">
-                <div style="width:46px;height:46px;border-radius:50%;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;margin:0 auto .55rem;font-size:1.2rem">&#x1F6E1;&#xFE0F;</div>
-                <div style="font-size:.75rem;font-weight:600;margin-bottom:.3rem">Health Transparency</div>
-                <div id="cat-health-tag" style="font-size:.75rem;font-weight:700;color:var(--orange);margin-bottom:.45rem">Medium</div>
-                <div id="cat-health-desc" style="font-size:.68rem;color:var(--text-dim);line-height:1.45">No chemical safety certification found. May trap heat and sweat.</div>
-              </div>
-              <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center">
-                <div style="width:46px;height:46px;border-radius:50%;background:var(--red-pale);display:flex;align-items:center;justify-content:center;margin:0 auto .55rem;font-size:1.2rem">&#x26A0;&#xFE0F;</div>
-                <div style="font-size:.75rem;font-weight:600;margin-bottom:.3rem">Greenwashing Risk</div>
-                <div id="cat-gw-tag" style="font-size:.75rem;font-weight:700;color:var(--red);margin-bottom:.45rem">High</div>
-                <div id="cat-gw-desc" style="font-size:.68rem;color:var(--text-dim);line-height:1.45">Uses vague claim "Eco-friendly" with no proof or certification.</div>
-              </div>
-              <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;text-align:center">
-                <div style="width:46px;height:46px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;margin:0 auto .55rem;font-size:1.2rem">&#x267B;&#xFE0F;</div>
-                <div style="font-size:.75rem;font-weight:600;margin-bottom:.3rem">Circularity Score</div>
-                <div id="cat-circ-tag" style="font-size:.75rem;font-weight:700;color:var(--red);margin-bottom:.45rem">Low</div>
-                <div id="cat-circ-desc" style="font-size:.68rem;color:var(--text-dim);line-height:1.45">Synthetic blend makes it difficult to recycle or biodegrade.</div>
-              </div>
-            </div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.75rem">
-              <!-- Biodegradability -->
-              <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem">
-                <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.75rem">
-                  <span style="background:var(--green-pale);color:var(--green-dark);font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:.25rem .65rem;border-radius:14px">Biodegradability</span>
-                  <span style="font-size:1rem">&#x267B;&#xFE0F;</span>
-                </div>
-                <div class="bio-val" id="r-bio-val" style="font-size:1.5rem;font-weight:800;color:var(--green-dark);margin-bottom:.2rem">0&#x2013;20 years+</div>
-                <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:.65rem">Estimated decomposition time in landfill</div>
-                <div style="position:relative;height:7px;background:linear-gradient(90deg,var(--green),#fbbf24,var(--red));border-radius:4px;margin-bottom:.35rem">
-                  <div class="bio-dot" style="position:absolute;width:14px;height:14px;background:var(--purple);border:3px solid var(--white);border-radius:50%;top:-3.5px;right:5%;box-shadow:0 1px 4px rgba(0,0,0,.15)"></div>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:.6rem;color:var(--text-muted);margin-bottom:.75rem">
-                  <span>Biodegradable<br>(0&#x2013;1 year)</span>
-                  <span style="text-align:center">Limited<br>(1&#x2013;10 years)</span>
-                  <span style="text-align:right">Not biodegradable<br>(10&#x2013;100+ years)</span>
-                </div>
-                <div style="background:linear-gradient(135deg,var(--purple-pale),#f3e8ff);border-radius:var(--radius-sm);padding:.7rem;display:flex;gap:.45rem">
-                  <div style="font-size:1.2rem;flex-shrink:0">&#x1F4A1;</div>
-                  <div>
-                    <div style="font-size:.75rem;font-weight:600;color:var(--purple);margin-bottom:.15rem">Why it matters</div>
-                    <div style="font-size:.68rem;color:var(--text-dim);line-height:1.5">Synthetic fibers like polyester do not biodegrade naturally and can persist in the environment for decades or even centuries.</div>
-                  </div>
-                </div>
-              </div>
-              <div style="background:linear-gradient(160deg,#f0fdf4,#dcfce7,#d1fae5);border:1px solid var(--green-light);border-radius:var(--radius);padding:1.1rem;position:relative;overflow:hidden;min-height:200px">
-                <div style="display:flex;align-items:center;gap:.4rem;margin-bottom:.75rem"><span style="font-size:1.2rem">&#x1F33F;</span><span style="font-size:.85rem;font-weight:800;color:var(--green-dark);text-transform:uppercase;letter-spacing:.3px">What does this mean?</span></div>
-                <p id="r-explain" style="font-size:.82rem;color:var(--text);line-height:1.6;max-width:65%">Polyester has lower water usage but higher carbon emissions and health risks compared to natural fibers.</p>
-                <div style="position:absolute;bottom:0;right:0;font-size:5rem;line-height:1;opacity:.9">&#x1F30D;</div>
-                <div style="position:absolute;bottom:10px;right:80px;font-size:1.8rem;opacity:.5">&#x1F33F;</div>
-                <div style="position:absolute;bottom:50px;right:30px;font-size:1rem;opacity:.4">&#x2728;</div>
-                <div style="position:absolute;top:15px;right:20px;font-size:.8rem;opacity:.3">&#x2728;</div>
-                <div style="position:absolute;bottom:5px;left:40%;font-size:.7rem;opacity:.3">&#x2728;</div>
-              </div>
-            </div>
-
-            <!-- Trust signals -->
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-top:1rem;display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;text-align:center">
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x2705;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Evidence-Based</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">We use trusted data and certifications.</div></div>
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x1F512;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Transparent</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">We show what we know and what we don't.</div></div>
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x1F30D;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Better for You &amp; Planet</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">Small choices. Big impact.</div></div>
-              <div><div style="font-size:1.3rem;margin-bottom:.3rem">&#x267B;&#xFE0F;</div><div style="font-size:.75rem;font-weight:600;color:var(--text);margin-bottom:.15rem">Reduce. Reuse.</div><div style="font-size:.68rem;color:var(--text-dim);line-height:1.4">Rethink Fashion.</div></div>
-            </div>
-          </div>
-          <div>
-            <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;margin-bottom:.75rem">
-              <div style="font-size:.85rem;font-weight:700;margin-bottom:.7rem">&#x1F33F; Better Choices for You</div>
-              <div id="r-alternatives">
-                <div style="display:flex;align-items:center;gap:.65rem;padding:.65rem 0;border-bottom:1px solid var(--border-light)">
-                  <div style="width:44px;height:44px;border-radius:var(--radius-xs);background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">&#x1F455;</div>
-                  <div style="flex:1"><div style="font-size:.8rem;font-weight:600">Organic Cotton Tee</div><div style="font-size:.68rem;color:var(--text-muted)">$18.99 &#x2022; Certified Organic</div><span class="tag-low" style="font-size:.6rem;padding:.12rem .4rem;border-radius:5px;font-weight:600">Lower Impact</span></div>
-                  <span style="color:var(--text-muted);font-size:.8rem">&#x203A;</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:.65rem;padding:.65rem 0;border-bottom:1px solid var(--border-light)">
-                  <div style="width:44px;height:44px;border-radius:var(--radius-xs);background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">&#x1F455;</div>
-                  <div style="flex:1"><div style="font-size:.8rem;font-weight:600">Secondhand Top</div><div style="font-size:.68rem;color:var(--text-muted)">$9.00 &#x2022; Pre-loved</div><span class="tag-low" style="font-size:.6rem;padding:.12rem .4rem;border-radius:5px;font-weight:600">Lower Impact</span></div>
-                  <span style="color:var(--text-muted);font-size:.8rem">&#x203A;</span>
-                </div>
-                <div style="display:flex;align-items:center;gap:.65rem;padding:.65rem 0">
-                  <div style="width:44px;height:44px;border-radius:var(--radius-xs);background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0">&#x1F455;</div>
-                  <div style="flex:1"><div style="font-size:.8rem;font-weight:600">Linen Shirt</div><div style="font-size:.68rem;color:var(--text-muted)">$24.99 &#x2022; Breathable</div><span class="tag-low" style="font-size:.6rem;padding:.12rem .4rem;border-radius:5px;font-weight:600">Lower Impact</span></div>
-                  <span style="color:var(--text-muted);font-size:.8rem">&#x203A;</span>
-                </div>
-              </div>
-              <a href="#" onclick="navigateTo('sell');return false" style="display:block;text-align:right;font-size:.75rem;color:var(--green-dark);font-weight:500;margin-top:.55rem">View more alternatives &#x2192;</a>
-            </div>
-            <div style="background:var(--green-pale);border:1px solid var(--green-light);border-radius:var(--radius);padding:1.5rem;display:flex;gap:.85rem;align-items:center">
-              <div style="font-size:2.5rem;flex-shrink:0">&#x1F30D;</div>
-              <div>
-                <div style="font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.3rem">Make better choices. Earn rewards.</div>
-                <div style="font-size:.78rem;color:var(--text-dim);margin:.35rem 0 .6rem;line-height:1.5">Earn points for choosing better, donating, repairing and rewearing.</div>
-                <button onclick="navigateTo('rewards')" style="background:var(--green);color:#fff;border:none;border-radius:var(--radius-xs);padding:.45rem 1rem;font-size:.78rem;font-weight:600;cursor:pointer">See Rewards</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div><!-- /analysis-results -->
-    </div><!-- /page-analyze -->
-
-    <!-- ===== SELL CLOTHES ===== -->
-    <div class="page" id="page-sell">
-      <!-- Thrifting -->
-      <div class="card" style="margin-bottom:.85rem">
-        <div class="card-hd"><h3><span class="ic">&#x1F49C;</span> Want to Try Thrifting?</h3></div>
-        <div class="card-bd">
-          <div style="font-size:.72rem;color:var(--text-dim);margin-bottom:.5rem;font-style:italic">Great finds. Lower impact. Unique style.</div>
-          <div class="alt-scroll">
-            <div class="thrift-card"><div class="thrift-img">&#x1F455;</div><div class="thrift-info"><h5>Vintage Striped Tee</h5><div class="thrift-fabric">100% Cotton</div><div class="thrift-price">$8.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-            <div class="thrift-card"><div class="thrift-img">&#x1F9E5;</div><div class="thrift-info"><h5>Denim Jacket</h5><div class="thrift-fabric">100% Cotton</div><div class="thrift-price">$15.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-            <div class="thrift-card"><div class="thrift-img">&#x1F457;</div><div class="thrift-info"><h5>Floral Midi Dress</h5><div class="thrift-fabric">100% Viscose</div><div class="thrift-price">$12.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-            <div class="thrift-card"><div class="thrift-img">&#x1F9F6;</div><div class="thrift-info"><h5>Chunky Knit Sweater</h5><div class="thrift-fabric">65% Wool, 35% Nylon</div><div class="thrift-price">$18.00</div><span class="thrift-tag">Thrift Store Find</span></div></div>
-          </div>
-          <div class="dots"><span class="d on"></span><span class="d"></span><span class="d"></span><span class="d"></span></div>
+      <!-- EMPTY STATE (shown when no product data) -->
+      <div id="analysis-empty">
+        <div class="empty" style="padding:4rem 1rem">
+          <div class="ei" style="font-size:3rem">🌿</div>
+          <h2 style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem;margin-top:.5rem">No product to analyze</h2>
+          <p style="font-size:.82rem;color:var(--text-dim)">Use the EcoPulse browser extension on a product page, then click "Open Full Dashboard" to see the AI-powered analysis here.</p>
         </div>
       </div>
 
-      <!-- List + My Listings -->
+      <!-- RESULTS (populated dynamically by JS after AI response) -->
+      <div id="analysis-results" style="display:none">
+
+        <div class="back-link" onclick="navigateTo('dashboard')">← Back to results</div>
+
+        <!-- Product Hero -->
+        <div style="display:flex;gap:1.25rem;background:var(--white);border-radius:var(--radius);padding:1.1rem;border:1px solid var(--border);margin-bottom:.85rem">
+          <div id="r-img-wrap" style="width:200px;min-height:240px;border-radius:var(--radius-sm);background:linear-gradient(135deg,#ede9fe,#ddd6fe);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;position:relative">
+            <img id="r-img" src="" alt="Product image" style="width:100%;height:100%;object-fit:cover;display:none">
+            <span id="r-img-fallback" style="font-size:4rem">👚</span>
+            <div style="position:absolute;bottom:8px;left:8px;font-size:1.8rem">🌿</div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.3rem">
+              <div>
+                <h2 id="r-product-name" style="font-size:1.3rem;font-weight:700;margin-bottom:.15rem"></h2>
+                <div id="r-subtitle" style="font-size:.85rem;color:var(--text-dim);margin-bottom:.45rem"></div>
+                <span class="impact-badge" id="r-impact"></span>
+              </div>
+              <div style="display:flex;gap:.4rem">
+                <button class="action-btn">♡ Save</button>
+                <button class="action-btn">↗ Share</button>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:.55rem;margin-top:auto">
+              <div class="metric-card"><div class="mc-icon">🏭</div><div class="mc-label">Carbon emissions</div><div class="mc-value" id="mc-carbon">—</div><div class="mc-sub">CO₂ equivalent</div><div class="mc-tag" id="mc-carbon-tag"></div></div>
+              <div class="metric-card"><div class="mc-icon">💧</div><div class="mc-label">Water usage</div><div class="mc-value" id="mc-water">—</div><div class="mc-sub">per garment produced</div><div class="mc-tag" id="mc-water-tag"></div></div>
+              <div class="metric-card"><div class="mc-icon">💜</div><div class="mc-label">Health risk</div><div class="mc-value" id="mc-health">—</div><div class="mc-sub" id="mc-health-sub"></div><div class="mc-tag" id="mc-health-tag"></div></div>
+              <div class="metric-card"><div class="mc-icon">🧪</div><div class="mc-label">Synthetic content</div><div class="mc-value" id="mc-synth">—</div><div class="mc-sub">—</div><div class="mc-tag" id="mc-synth-tag"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Material Breakdown -->
+        <div class="card">
+          <div class="card-hd"><h3><span class="ic">🧵</span> Material Breakdown</h3></div>
+          <div class="card-bd">
+            <div class="mat-section">
+              <div id="r-materials"></div>
+              <div class="mat-explain">
+                <h4>💡 What does this mean?</h4>
+                <p>Loading AI analysis...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Health Risks + Biodegradability -->
+        <div class="card">
+          <div class="card-bd" style="padding-top:.85rem">
+            <div class="health-grid">
+              <div class="health-section">
+                <h4><span style="color:var(--red)">⚠️</span> Health Risks</h4>
+                <div id="r-health-risks"></div>
+              </div>
+              <div class="health-section">
+                <h4><span style="color:var(--green)">✅</span> Biodegradability</h4>
+                <div class="bio-val" id="r-bio-val">—</div>
+                <div class="bio-sub">Estimated decomposition time in landfill</div>
+                <div class="bio-bar"><div class="bio-dot" style="right:50%"></div></div>
+                <div class="bio-labels"><span>Biodegradable<br>(0–1 year)</span><span>Limited<br>(1–10 years)</span><span>Not biodegradable<br>(10–100+ years)</span></div>
+                <div class="why-box"><div class="wi">💬</div><div><h5>Why it matters</h5><p>Loading AI analysis...</p></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Alternatives + Rewards -->
+        <div class="grid-main">
+          <div>
+            <div class="card">
+              <div class="card-hd"><h3><span class="ic">🌿</span> Better Choices: Verified Alternatives</h3><a href="#" onclick="navigateTo('alternatives');return false">View all alternatives →</a></div>
+              <div class="card-bd">
+                <div class="alt-scroll" id="r-alternatives"><div class="empty"><div class="ei">🌱</div><p>Alternatives loaded from database.</p></div></div>
+              </div>
+            </div>
+            <div class="motive">
+              <div style="font-size:2.5rem;margin-bottom:.35rem">🌱</div>
+              <h4>Small choices, Big impact.</h4>
+              <p>Every sustainable action you take makes a difference.</p>
+            </div>
+          </div>
+          <div>
+            <div class="rw-panel">
+              <div class="rw-head"><span class="ri">🏆</span><h3>Your Rewards</h3></div>
+              <div class="rw-pts"><div class="rv" id="rw-total">0</div><div class="rl">Eco Points</div></div>
+              <div class="rw-next">Next milestone: 100 points</div>
+              <div class="rw-stitle">Earn More Points</div>
+              <div class="rw-row"><span>✅ View low-impact product</span><span>+10</span></div>
+              <div class="rw-row"><span>✅ Choose verified alternative</span><span>+25</span></div>
+              <div class="rw-row"><span>👕 Log a rewear</span><span>+15</span></div>
+              <div class="rw-row"><span>🎁 Log a donation</span><span>+20</span></div>
+              <button class="rw-all" onclick="navigateTo('rewards')">View all rewards</button>
+            </div>
+          </div>
+        </div>
+      </div><!-- /analysis-results -->
+    </div><!-- /page-analyze -->
+
+    <!-- ===== ALTERNATIVES ===== -->
+    <div class="page" id="page-alternatives">
+      <div class="card"><div class="card-hd"><h3><span class="ic">🌱</span> Find Sustainable Alternatives</h3></div><div class="card-bd">
+        <div style="display:flex;gap:.5rem;align-items:flex-end">
+          <div class="form-group" style="flex:1;margin-bottom:0"><label>Category</label><select class="form-input" id="alt-category"><option value="">Select...</option><option value="t-shirt">T-Shirts</option><option value="jeans">Jeans</option><option value="dress">Dresses</option><option value="jacket">Jackets</option><option value="activewear">Activewear</option></select></div>
+          <div class="form-group" style="width:110px;margin-bottom:0"><label>Max Price</label><input class="form-input" id="alt-price" type="number" placeholder="No limit"></div>
+          <button class="btn btn-green" id="alt-go">Search</button>
+        </div>
+      </div></div>
+      <div id="alt-results"><div class="empty"><div class="ei">🌱</div><p>Search for sustainable alternatives above.</p></div></div>
+    </div>
+
+    <!-- ===== AI CHAT ===== -->
+    <div class="page" id="page-chat">
+      <div class="card" style="height:calc(100vh - 120px)"><div class="card-hd"><h3><span class="ic">💬</span> AI Material Chat</h3><span style="font-size:.68rem;color:var(--green);font-weight:600">● Online</span></div>
+        <div class="card-bd chat-wrap">
+          <div class="chat-msgs" id="chat-messages"><div class="chat-msg bot"><div>Hi! I'm your EcoPulse AI assistant. Ask me about fabrics, dyes, chemicals, certifications, or brand sustainability claims.</div><div class="conf">🟢 Ready to help</div></div></div>
+          <div class="chat-input-row"><input class="form-input" id="chat-input" placeholder="Ask about materials, certifications, or sustainability..." aria-label="Chat message"><button class="btn btn-purple" id="chat-send">Send</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== SELL CLOTHES ===== -->
+    <div class="page" id="page-sell">
       <div class="grid-2">
-        <div class="card"><div class="card-hd"><h3><span class="ic">&#x1F457;</span> List an Item for Sale</h3></div><div class="card-bd">
-          <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload clothing images"><div style="font-size:1.8rem;margin-bottom:.3rem">&#x1F4F8;</div><p style="font-size:.78rem;color:var(--text-dim)">Drag &amp; drop photos or click to upload</p><div style="font-size:.65rem;color:var(--text-muted);margin-top:.15rem">JPG, PNG up to 5MB · Max 4 photos</div></div>
+        <div class="card"><div class="card-hd"><h3><span class="ic">👗</span> List an Item for Sale</h3></div><div class="card-bd">
+          <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload clothing images"><div style="font-size:1.8rem;margin-bottom:.3rem">📸</div><p style="font-size:.78rem;color:var(--text-dim)">Drag & drop photos or click to upload</p><div style="font-size:.65rem;color:var(--text-muted);margin-top:.15rem">JPG, PNG up to 5MB · Max 4 photos</div></div>
           <input type="file" id="sell-file-input" accept="image/*" multiple style="display:none" aria-hidden="true">
           <div class="upload-preview" id="upload-preview"></div>
           <div style="margin-top:.7rem">
@@ -478,11 +449,19 @@ textarea.form-input{min-height:50px;resize:vertical}
             <div style="display:flex;gap:.5rem"><div class="form-group" style="flex:1"><label>Category</label><select class="form-input" id="sell-category"><option value="tops">Tops</option><option value="bottoms">Bottoms</option><option value="dresses">Dresses</option><option value="outerwear">Outerwear</option><option value="activewear">Activewear</option><option value="accessories">Accessories</option></select></div><div class="form-group" style="flex:1"><label>Condition</label><select class="form-input" id="sell-condition"><option value="excellent">Excellent</option><option value="good">Good</option><option value="fair">Fair</option></select></div></div>
             <div style="display:flex;gap:.5rem"><div class="form-group" style="flex:1"><label>Price ($)</label><input class="form-input" id="sell-price" type="number" placeholder="25.00"></div><div class="form-group" style="flex:1"><label>Size</label><input class="form-input" id="sell-size" placeholder="M, L, 32"></div></div>
             <div class="form-group"><label>Description</label><textarea class="form-input" id="sell-desc" placeholder="Describe the item, fabric, any flaws..."></textarea></div>
-            <button class="btn btn-green btn-lg" id="sell-submit" style="width:100%">List Item (+25 pts) &#x2192;</button>
+            <button class="btn btn-green btn-lg" id="sell-submit" style="width:100%">List Item (+25 pts) →</button>
           </div>
         </div></div>
         <div>
-          <div class="card"><div class="card-hd"><h3><span class="ic">&#x1F4E6;</span> My Listings</h3><span style="font-size:.68rem;color:var(--green);font-weight:600" id="listing-count">0 items</span></div><div class="card-bd" id="my-listings"><div class="empty"><div class="ei">&#x1F457;</div><p>No listings yet. Give your clothes a second life!</p></div></div></div>
+          <div class="card"><div class="card-hd"><h3><span class="ic">📦</span> My Listings</h3><span style="font-size:.68rem;color:var(--green);font-weight:600" id="listing-count">0 items</span></div><div class="card-bd" id="my-listings"><div class="empty"><div class="ei">👗</div><p>No listings yet. Give your clothes a second life!</p></div></div></div>
+          <div class="card"><div class="card-hd"><h3><span class="ic">🛍️</span> Marketplace</h3><span style="font-size:.62rem;padding:.12rem .4rem;border-radius:7px;background:var(--orange-pale);color:var(--orange);font-weight:600">Coming Soon</span></div><div class="card-bd">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+              <div style="background:var(--bg);border-radius:var(--radius-xs);padding:.5rem;text-align:center"><div style="font-size:1.3rem;margin-bottom:.2rem">👕</div><div style="font-size:.72rem;font-weight:600">Organic Cotton Tee</div><div style="font-size:.78rem;font-weight:700;color:var(--green-dark)">$18.00</div></div>
+              <div style="background:var(--bg);border-radius:var(--radius-xs);padding:.5rem;text-align:center"><div style="font-size:1.3rem;margin-bottom:.2rem">👖</div><div style="font-size:.72rem;font-weight:600">Vintage Levi's 501</div><div style="font-size:.78rem;font-weight:700;color:var(--green-dark)">$35.00</div></div>
+              <div style="background:var(--bg);border-radius:var(--radius-xs);padding:.5rem;text-align:center"><div style="font-size:1.3rem;margin-bottom:.2rem">🧥</div><div style="font-size:.72rem;font-weight:600">Wool Blend Coat</div><div style="font-size:.78rem;font-weight:700;color:var(--green-dark)">$55.00</div></div>
+              <div style="background:var(--bg);border-radius:var(--radius-xs);padding:.5rem;text-align:center"><div style="font-size:1.3rem;margin-bottom:.2rem">👗</div><div style="font-size:.72rem;font-weight:600">Linen Wrap Dress</div><div style="font-size:.78rem;font-weight:700;color:var(--green-dark)">$28.00</div></div>
+            </div>
+          </div></div>
         </div>
       </div>
     </div>
@@ -498,7 +477,10 @@ textarea.form-input{min-height:50px;resize:vertical}
         <div class="card"><div class="card-hd"><h3><span class="ic">🏆</span> Earn Points</h3></div><div class="card-bd">
           <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.6rem">Log sustainable actions to earn reward points:</p>
           <div style="display:flex;gap:.4rem;flex-wrap:wrap">
-            <button class="btn btn-outline" onclick="logReward('donation')">&#x1F381; Donation <span style="color:var(--green-dark);font-weight:700">+15</span></button>
+            <button class="btn btn-outline" onclick="logReward('rewear')">👕 Rewear <span style="color:var(--green-dark);font-weight:700">+5</span></button>
+            <button class="btn btn-outline" onclick="logReward('donation')">🎁 Donation <span style="color:var(--green-dark);font-weight:700">+15</span></button>
+            <button class="btn btn-outline" onclick="logReward('repair')">🧵 Repair <span style="color:var(--green-dark);font-weight:700">+10</span></button>
+            <button class="btn btn-outline" onclick="logReward('recycle')">♻️ Recycle <span style="color:var(--green-dark);font-weight:700">+20</span></button>
           </div>
           <div id="rw-msg" style="font-size:.72rem;color:var(--green-dark);margin-top:.4rem;display:none"></div>
         </div></div>
@@ -512,27 +494,63 @@ textarea.form-input{min-height:50px;resize:vertical}
       </div></div></div>
     </div>
 
+    <!-- ===== LOCATIONS ===== -->
+    <div class="page" id="page-locations">
+      <div class="card"><div class="card-hd"><h3><span class="ic">📍</span> Find Donation & Recycling Centers</h3></div><div class="card-bd">
+        <div style="display:flex;gap:.5rem;align-items:flex-end">
+          <div class="form-group" style="flex:1;margin-bottom:0"><label>Latitude</label><input class="form-input" id="loc-lat" value="40.7128"></div>
+          <div class="form-group" style="flex:1;margin-bottom:0"><label>Longitude</label><input class="form-input" id="loc-lng" value="-74.006"></div>
+          <div class="form-group" style="width:100px;margin-bottom:0"><label>Radius (km)</label><input class="form-input" id="loc-radius" value="50" type="number"></div>
+          <button class="btn btn-green" id="loc-go">Search</button>
+        </div>
+      </div></div>
+      <div id="loc-results"><div class="empty"><div class="ei">📍</div><p>Enter coordinates and search for nearby centers.</p></div></div>
+    </div>
+
   </div>
 </div>
-
-<!-- Floating AI Chat Widget -->
-<div id="chat-fab" style="position:fixed;bottom:24px;right:24px;z-index:200;width:52px;height:52px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.4rem;cursor:pointer;box-shadow:0 4px 16px rgba(124,58,237,.35);transition:transform .15s" onclick="toggleChat()" title="AI Chat">💬</div>
-
-<div id="chat-panel" style="position:fixed;bottom:88px;right:24px;z-index:200;width:360px;height:480px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.12);display:none;flex-direction:column;overflow:hidden">
-  <div style="padding:.6rem .8rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--purple);color:#fff;border-radius:var(--radius) var(--radius) 0 0">
-    <div style="display:flex;align-items:center;gap:.35rem;font-size:.82rem;font-weight:600">💬 AI Material Chat <span style="font-size:.6rem;opacity:.7;margin-left:.3rem">● Online</span></div>
-    <button onclick="toggleChat()" style="background:none;border:none;color:#fff;font-size:1rem;cursor:pointer;padding:0;line-height:1">✕</button>
-  </div>
-  <div class="chat-msgs" id="chat-messages" style="flex:1;overflow-y:auto;padding:.6rem .7rem">
-    <div class="chat-msg bot"><div>Hi! I'm your EcoPulse AI assistant. Ask me about fabrics, dyes, chemicals, certifications, or brand sustainability claims.</div><div class="conf">🟢 Ready to help</div></div>
-  </div>
-  <div style="padding:.5rem .7rem;border-top:1px solid var(--border);display:flex;gap:.35rem">
-    <input class="form-input" id="chat-input" placeholder="Ask about materials..." aria-label="Chat message" style="flex:1;font-size:.76rem">
-    <button class="btn btn-purple" id="chat-send" style="padding:.4rem .7rem;font-size:.76rem">Send</button>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
+
+<!-- AI Chatbot Floating Bubble -->
+<style>
+.chatbot-fab{position:fixed;bottom:24px;right:24px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 16px rgba(34,197,94,.35);z-index:9998;border:none;transition:transform .2s,box-shadow .2s}
+.chatbot-fab:hover{transform:scale(1.08);box-shadow:0 6px 24px rgba(34,197,94,.45)}
+.chatbot-fab.open{transform:rotate(45deg)}
+.chatbot-panel{position:fixed;bottom:92px;right:24px;width:370px;max-height:500px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:0 8px 32px rgba(0,0,0,.12);z-index:9998;display:none;flex-direction:column;overflow:hidden}
+.chatbot-panel.open{display:flex}
+.chatbot-hd{padding:.65rem .85rem;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#fff;display:flex;align-items:center;justify-content:space-between}
+.chatbot-hd h3{font-size:.82rem;font-weight:700;display:flex;align-items:center;gap:.35rem}
+.chatbot-hd .status{font-size:.6rem;opacity:.8}
+.chatbot-msgs{flex:1;overflow-y:auto;padding:.65rem;display:flex;flex-direction:column;gap:.45rem;min-height:250px;max-height:350px}
+.chatbot-msg{max-width:85%;padding:.45rem .65rem;border-radius:var(--radius-sm);font-size:.78rem;line-height:1.5}
+.chatbot-msg.bot{align-self:flex-start;background:var(--bg);color:var(--text);border-bottom-left-radius:4px}
+.chatbot-msg.bot b{font-weight:600;color:var(--text)}
+.chatbot-msg.bot i{font-style:italic;color:var(--text-dim)}
+.chatbot-msg.user{align-self:flex-end;background:var(--green);color:#fff;border-bottom-right-radius:4px}
+.chatbot-msg .typing{display:inline-flex;gap:3px}.chatbot-msg .typing span{width:6px;height:6px;background:var(--text-muted);border-radius:50%;animation:blink 1.4s infinite both}
+.chatbot-msg .typing span:nth-child(2){animation-delay:.2s}.chatbot-msg .typing span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.3}40%{opacity:1}}
+.chatbot-input{display:flex;gap:.35rem;padding:.5rem .65rem;border-top:1px solid var(--border)}
+.chatbot-input input{flex:1;border:1px solid var(--border);border-radius:var(--radius-xs);padding:.4rem .6rem;font-size:.78rem;outline:none}
+.chatbot-input input:focus{border-color:var(--green)}
+.chatbot-input button{background:var(--green);color:#fff;border:none;border-radius:var(--radius-xs);padding:.4rem .7rem;font-size:.78rem;font-weight:600;cursor:pointer}
+.chatbot-input button:hover{background:var(--green-dark)}
+</style>
+
+<button class="chatbot-fab" id="chatbot-fab" aria-label="Open AI Chat">💬</button>
+<div class="chatbot-panel" id="chatbot-panel">
+  <div class="chatbot-hd">
+    <h3>🌿 EcoPulse AI</h3>
+    <span class="status">● Online</span>
+  </div>
+  <div class="chatbot-msgs" id="chatbot-msgs">
+    <div class="chatbot-msg bot">Hi! Ask me anything about fabrics, sustainability, certifications, or the product you're viewing.</div>
+  </div>
+  <div class="chatbot-input">
+    <input id="chatbot-input" placeholder="Ask about materials, health risks..." aria-label="Chat message">
+    <button id="chatbot-send">Send</button>
+  </div>
+</div>
 
 <script>
 var analysisHistory=[],myListings=[],chatMessages=[],uploadedImages=[];
@@ -552,115 +570,148 @@ function navigateTo(id){
 }
 function showToast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},3000)}
 
-// FLOATING CHAT TOGGLE
-function toggleChat(){
-  var p=document.getElementById('chat-panel');
-  var isOpen=p.style.display==='flex';
-  p.style.display=isOpen?'none':'flex';
-  if(!isOpen){var inp=document.getElementById('chat-input');if(inp)inp.focus()}
-}
-function askQuickQ(q){toggleChat();var inp=document.getElementById('chat-input');if(inp){inp.value=q;document.getElementById('chat-send').click()}}
-
-// REWARDS DROPDOWN
-function toggleRewardsDropdown(){
-  var dd=document.getElementById('rewards-dropdown');
-  dd.style.display=dd.style.display==='block'?'none':'block';
-}
-document.addEventListener('click',function(e){
-  var dd=document.getElementById('rewards-dropdown');
-  var btn=document.getElementById('eco-pts-btn');
-  if(dd.style.display==='block'&&!btn.contains(e.target)&&!dd.contains(e.target)){dd.style.display='none'}
-});
-
 // LOAD REWARDS
 fetch('/api/rewards/'+userId).then(function(r){return r.json()}).then(function(d){
   var b=d.balance||0;
   document.getElementById('pts-val').textContent=b.toLocaleString();
+  document.getElementById('stat-points').textContent=b;
   document.getElementById('rw-total').textContent=b.toLocaleString();
   document.getElementById('rw-total-page').textContent=b;
   updateLevel(b);
   if(d.history&&d.history.length){document.getElementById('rw-actions').textContent=d.history.length;renderRewardHistory(d.history)}
 }).catch(function(){});
 
-// AUTO-LOAD from extension: check for ?analysis= query param
+// AUTO-LOAD from extension: read product data from URL params and call AI
 (function(){
   var params=new URLSearchParams(window.location.search);
-  var analysisUrl=params.get('analysis');
-  if(analysisUrl){
+  var productName=params.get('productName');
+  var fabric=params.get('fabric');
+  console.log('[EcoPulse] URL params — productName:', productName, 'fabric:', fabric);
+  if(productName&&fabric){
+    // We have product data from the extension — auto-analyze with AI
     navigateTo('analyze');
-    fetch('/api/analysis/'+encodeURIComponent(analysisUrl))
-      .then(function(r){if(!r.ok)throw new Error('Not found');return r.json()})
-      .then(function(d){showAnalysis(d);addToHistory(d);showToast('Analysis loaded from extension!')})
-      .catch(function(){});
+    document.getElementById('a-name').value=productName;
+    document.getElementById('a-brand').value=params.get('brand')||'Unknown';
+    document.getElementById('a-fabric').value=fabric;
+    document.getElementById('a-claims').value=params.get('claims')||'';
+    document.getElementById('a-certs').value=params.get('certs')||'';
+    document.getElementById('a-imageUrl').value=params.get('imageUrl')||'';
+    // Auto-trigger analysis
+    setTimeout(function(){ document.getElementById('a-go').click(); }, 100);
   }
 })();
 
-// ANALYZE
+// QUICK ANALYZE
+document.getElementById('q-go').addEventListener('click',function(){
+  var n=document.getElementById('q-name').value.trim(),f=document.getElementById('q-fabric').value.trim();
+  if(!n||!f){showToast('Product name and fabric required.');return}
+  navigateTo('analyze');document.getElementById('a-name').value=n;document.getElementById('a-brand').value=document.getElementById('q-brand').value;document.getElementById('a-fabric').value=f;document.getElementById('a-imageUrl').value='';document.getElementById('a-go').click();
+});
+
+function setTag(id,lvl){var e=document.getElementById(id);e.textContent=lvl;e.className='mc-tag '+(lvl==='High'?'tag-high':lvl==='Medium'?'tag-medium':'tag-low')}
+
+// ANALYZE — calls AI-powered endpoint
 document.getElementById('a-go').addEventListener('click',async function(){
   var name=document.getElementById('a-name').value.trim(),fabric=document.getElementById('a-fabric').value.trim();
   if(!name||!fabric){showToast('Product name and fabric required.');return}
-  this.textContent='Analyzing...';this.disabled=true;
+  // Show loading, hide empty and results
+  document.getElementById('analysis-empty').style.display='none';
+  document.getElementById('analysis-results').style.display='none';
+  document.getElementById('analysis-loading').style.display='block';
   try{
-    var r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:'https://dashboard',productName:name,brand:document.getElementById('a-brand').value.trim()||'Unknown',fabricCompositionText:fabric,sustainabilityClaims:(document.getElementById('a-claims').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean),certificationMentions:(document.getElementById('a-certs').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean),imageUrl:null})});
+    var brand=document.getElementById('a-brand').value.trim()||'Unknown';
+    var claims=(document.getElementById('a-claims').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean);
+    var certs=(document.getElementById('a-certs').value||'').split(',').map(function(s){return s.trim()}).filter(Boolean);
+    var imageUrl=document.getElementById('a-imageUrl').value.trim()||null;
+    var r=await fetch('/api/ai-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({productName:name,brand:brand,fabricCompositionText:fabric,sustainabilityClaims:claims,certificationMentions:certs})});
     var d=await r.json();if(d.error)throw new Error(d.error);
-    showAnalysis(d);addToHistory(d);showToast('Analysis complete!');
-  }catch(e){showToast('Error: '+e.message)}
-  this.textContent='Run Full Analysis →';this.disabled=false;
+    d._productName=name;d._brand=brand;d._fabric=fabric;d._imageUrl=imageUrl;
+    document.getElementById('analysis-loading').style.display='none';
+    showAIAnalysis(d);addToAIHistory(d);showToast('AI analysis complete!');
+  }catch(e){
+    document.getElementById('analysis-loading').style.display='none';
+    document.getElementById('analysis-empty').style.display='block';
+    showToast('Error: '+e.message);
+  }
 });
 
-var matImpact={polyester:{co2:9.52,water:71,color:'var(--red)'},nylon:{co2:11.2,water:60,color:'var(--red)'},acrylic:{co2:8.5,water:50,color:'var(--orange)'},spandex:{co2:14.0,water:110,color:'var(--orange)'},elastane:{co2:14.0,water:110,color:'var(--orange)'},cotton:{co2:5.9,water:10000,color:'var(--green)'},silk:{co2:4.0,water:3000,color:'var(--green)'},wool:{co2:7.8,water:6000,color:'var(--orange)'},linen:{co2:1.5,water:700,color:'var(--green)'},hemp:{co2:1.2,water:400,color:'var(--green)'},bamboo:{co2:3.0,water:900,color:'var(--green)'},rayon:{co2:5.5,water:2500,color:'var(--orange)'},viscose:{co2:5.5,water:2500,color:'var(--orange)'},modal:{co2:3.5,water:1500,color:'var(--green)'},lyocell:{co2:2.0,water:800,color:'var(--green)'},tencel:{co2:2.0,water:800,color:'var(--green)'},cashmere:{co2:12.0,water:8000,color:'var(--red)'}};
-var synthSet=new Set(['polyester','nylon','acrylic','spandex','elastane']);
+// No hardcoded matImpact — all data comes from AI
 
-function showAnalysis(d){
+function showAIAnalysis(d){
   document.getElementById('analysis-results').style.display='block';
-  var s=d.score,comps=d.fabricComposition?d.fabricComposition.components:[];
-  // Product info
-  document.getElementById('r-product-name').textContent=d.productName;
-  document.getElementById('r-brand').textContent=d.brand!=='Unknown'?d.brand:'';
-  document.getElementById('r-subtitle').textContent=comps.map(function(c){return c.percentage+'% '+c.material}).join(', ')||'';
-  var claims=d.greenwashingSignals&&d.greenwashingSignals.length?'"'+d.greenwashingSignals[0].term+'"':'None detected';
-  document.getElementById('r-claims-display').textContent=claims;
-  // Image
+  var name=d._productName||'Product';var brand=d._brand||'';
+  document.getElementById('r-product-name').textContent=name+(brand&&brand!=='Unknown'?' by '+brand:'');
+  document.getElementById('r-subtitle').textContent=d._fabric||d.materials.map(function(m){return m.percentage+'% '+m.material}).join(' · ');
+  // Product image from extension
   var imgEl=document.getElementById('r-img'),fallback=document.getElementById('r-img-fallback');
-  if(d.imageUrl){imgEl.onerror=function(){this.style.display='none';fallback.style.display='block'};imgEl.src='/api/image-proxy?url='+encodeURIComponent(d.imageUrl);imgEl.style.display='block';fallback.style.display='none'}
+  if(d._imageUrl){imgEl.src=d._imageUrl;imgEl.style.display='block';fallback.style.display='none'}
   else{imgEl.style.display='none';fallback.style.display='block'}
-  // Overall score (average of 3 scores)
-  var avg=Math.round((s.environmental+s.health+s.greenwashing)/3);
-  document.getElementById('score-num').textContent=avg;
-  var ring=document.getElementById('score-ring');
-  var offset=289-Math.round(289*avg/100);
-  ring.setAttribute('stroke-dashoffset',offset);
-  ring.setAttribute('stroke',avg>=60?'var(--green)':avg>=40?'var(--orange)':'var(--red)');
-  var lbl=document.getElementById('score-label');
-  lbl.textContent=avg>=60?'Low Impact':avg>=40?'Medium Impact':'High Impact';
-  lbl.style.color=avg>=60?'var(--green-dark)':avg>=40?'var(--orange)':'var(--red)';
-  document.getElementById('score-desc').textContent=avg>=60?'This item has lower environmental impact and good health transparency.':avg>=40?'This item has moderate impact. Some areas could be improved.':'This item has high environmental impact and limited health transparency. Consider safer alternatives.';
-  // Category cards
-  var synPct=0;comps.forEach(function(c){if(synthSet.has(c.material.toLowerCase()))synPct+=c.percentage});
-  var envLvl=s.environmental>=60?'Low':s.environmental>=40?'Medium':'High';
-  document.getElementById('cat-env-tag').textContent=envLvl;
-  document.getElementById('cat-env-tag').style.color=s.environmental>=60?'var(--green-dark)':s.environmental>=40?'var(--orange)':'var(--red)';
-  var hLvl=s.health>=60?'Low':s.health>=40?'Medium':'High';
-  document.getElementById('cat-health-tag').textContent=hLvl;
-  document.getElementById('cat-health-tag').style.color=s.health>=60?'var(--green-dark)':s.health>=40?'var(--orange)':'var(--red)';
-  var gwLvl=s.greenwashing>=60?'Low':s.greenwashing>=40?'Medium':'High';
-  document.getElementById('cat-gw-tag').textContent=gwLvl;
-  document.getElementById('cat-gw-tag').style.color=s.greenwashing>=60?'var(--green-dark)':s.greenwashing>=40?'var(--orange)':'var(--red)';
-  var circLvl=synPct>70?'Low':synPct>30?'Medium':'High';
-  document.getElementById('cat-circ-tag').textContent=circLvl;
-  document.getElementById('cat-circ-tag').style.color=synPct>70?'var(--red)':synPct>30?'var(--orange)':'var(--green-dark)';
-  // Why it matters
-  var wh='';
-  if(d.chemicalRisks&&d.chemicalRisks.length)d.chemicalRisks.forEach(function(cr){wh+='<div style="display:flex;gap:.45rem;align-items:flex-start;font-size:.73rem;line-height:1.45"><span style="font-size:.85rem;flex-shrink:0">&#x1F9EA;</span><span>'+cr.substance+': '+cr.healthEffects.join(', ')+'.</span></div>'});
-  if(synPct>=50)wh+='<div style="display:flex;gap:.45rem;align-items:flex-start;font-size:.73rem;line-height:1.45"><span style="font-size:.85rem;flex-shrink:0">&#x1F321;&#xFE0F;</span><span>May trap heat, increase skin irritation &amp; odor.</span></div>';
-  if(synPct>=30)wh+='<div style="display:flex;gap:.45rem;align-items:flex-start;font-size:.73rem;line-height:1.45"><span style="font-size:.85rem;flex-shrink:0">&#x1F30A;</span><span>Can shed microfibers into waterways when washed.</span></div>';
-  if(!wh)wh='<div style="font-size:.73rem;color:var(--green-dark)">&#x2705; No significant concerns identified for this product.</div>';
-  document.getElementById('r-health-risks').innerHTML=wh;
+  var imp=document.getElementById('r-impact');
+  if(d.overall_indicator==='green'){imp.textContent='🌿 Low overall impact';imp.className='impact-badge impact-low'}
+  else{imp.textContent='🔥 High overall impact';imp.className='impact-badge impact-high'}
+  // Metrics from AI
+  document.getElementById('mc-carbon').textContent=d.total_co2_kg.toFixed(2)+' kg';
+  document.getElementById('mc-water').textContent=d.total_water_liters.toFixed(2)+' L';
+  document.getElementById('mc-health').textContent=d.health_score>=60?'Low':d.health_score>=40?'Medium':'High';
+  document.getElementById('mc-health-sub').textContent=d.synthetic_percentage>0?d.synthetic_percentage+'% synthetic blend':'natural fibers';
+  document.getElementById('mc-synth').textContent=d.synthetic_percentage+'%';
+  setTag('mc-carbon-tag',d.total_co2_kg>7?'High':d.total_co2_kg>4?'Medium':'Low');
+  setTag('mc-water-tag',d.total_water_liters>5000?'High':d.total_water_liters>1000?'Medium':'Low');
+  setTag('mc-health-tag',d.health_score>=60?'Low':d.health_score>=40?'Medium':'High');
+  setTag('mc-synth-tag',d.synthetic_percentage>70?'High':d.synthetic_percentage>30?'Medium':'Low');
+  // Materials from AI
+  var mh='';d.materials.forEach(function(m){
+    var color=m.is_synthetic?'var(--red)':'var(--green)';
+    mh+='<div class="mat-item"><div class="mat-name">'+m.material+(m.qualifier?' ('+m.qualifier+')':'')+'</div>';
+    mh+='<div class="mat-meta">'+m.co2_per_kg+' kg CO₂/kg · '+m.water_per_kg+' L/kg — '+m.environmental_impact+'</div>';
+    mh+='<div class="mat-bar-row"><div class="mat-bar"><div class="mat-fill" style="width:'+m.percentage+'%;background:'+color+'"></div></div><span class="mat-pct">'+m.percentage+'%</span></div></div>';
+  });
+  mh+='<div class="mat-note">All impact data generated by AI analysis. CO₂ and water usage are weighted by percentage.</div>';
+  document.getElementById('r-materials').innerHTML=mh;
+  // Update material explanation from AI
+  var matExplain=document.querySelector('.mat-explain');
+  if(matExplain){matExplain.innerHTML='<h4>💡 What does this mean?</h4><p>'+d.material_explanation+'</p><div style="margin-top:.6rem;text-align:center;font-size:3rem">🌍</div>'}
+  // Health risks from AI
+  var rh='';if(d.health_risks&&d.health_risks.length){d.health_risks.forEach(function(hr){
+    var c=hr.severity==='high'?'r':'o',i=hr.severity==='high'?'🔴':'🟠';
+    rh+='<div class="risk-item"><div class="risk-icon '+c+'">'+i+'</div><div><b>'+hr.title+'</b> — '+hr.description+'</div></div>';
+  })}
+  if(!rh)rh='<div style="color:var(--text-muted);font-size:.78rem">No significant health risks identified.</div>';
+  document.getElementById('r-health-risks').innerHTML=rh;
+  // Biodegradability from AI
+  document.getElementById('r-bio-val').textContent=d.biodegradability_estimate;
+  document.querySelector('.bio-dot').style.right=(100-d.biodegradability_position)+'%';
+  // Update health explanation
+  var whyBox=document.querySelector('.why-box');
+  if(whyBox){whyBox.innerHTML='<div class="wi">💬</div><div><h5>Why it matters</h5><p>'+d.health_explanation+'</p></div>'}
   document.getElementById('analysis-results').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function addToHistory(d){analysisHistory.unshift(d)}
+
+function addToAIHistory(d){
+  var name=d._productName||'Product';var brand=d._brand||'';
+  var entry={productName:name,brand:brand,score:{environmental:d.environmental_score,health:d.health_score,greenwashing:d.greenwashing_score,overallIndicator:d.overall_indicator}};
+  analysisHistory.unshift(entry);document.getElementById('stat-analyzed').textContent=analysisHistory.length;
+  var sc=analysisHistory.map(function(a){return a.score.environmental});document.getElementById('stat-avg').textContent=Math.round(sc.reduce(function(a,b){return a+b},0)/sc.length);
+  var h=document.getElementById('history-bd'),html='';
+  analysisHistory.slice(0,8).forEach(function(i){var c=i.score.overallIndicator==='green'?'var(--green)':'var(--red)',bg=i.score.overallIndicator==='green'?'var(--green-pale)':'var(--red-pale)';html+='<div style="display:flex;align-items:center;gap:.5rem;padding:.4rem 0;border-bottom:1px solid var(--border-light);font-size:.78rem"><span style="display:inline-flex;width:26px;height:26px;border-radius:50%;background:'+bg+';align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:'+c+'">'+i.score.environmental+'</span><span style="flex:1">'+i.productName+'</span><span style="color:var(--text-muted);font-size:.68rem">'+(i.brand||'')+'</span></div>'});
+  h.innerHTML=html;
+}
 </script>
 <script>
+// ALTERNATIVES
+document.getElementById('alt-go').addEventListener('click',async function(){
+  var cat=document.getElementById('alt-category').value;if(!cat){showToast('Select a category.');return}
+  var url='/api/alternatives?category='+encodeURIComponent(cat);var mp=document.getElementById('alt-price').value;if(mp)url+='&maxPrice='+mp;
+  try{var r=await fetch(url);var d=await r.json();var el=document.getElementById('alt-results');
+    if(!d.length){el.innerHTML='<div class="empty"><div class="ei">🌱</div><p>No alternatives found.</p></div>';return}
+    var h='<div class="alt-scroll">';d.forEach(function(a){var t=a.score.environmental+a.score.health+a.score.greenwashing;var lv=t>=200?'Low':t>=120?'Medium':'High';var tc=t>=200?'tag-low':t>=120?'tag-medium':'tag-high';
+      h+='<div class="alt-card"><div class="alt-img">👕</div><div class="alt-info"><h5>'+a.productName+'</h5><div class="alt-fabric">'+a.brand+'</div>';
+      if(a.certifications.length)h+='<div class="alt-certs">'+a.certifications.map(function(c){return'<span class="alt-cert cg">'+c+'</span>'}).join('')+'</div>';
+      h+='<div class="alt-impact"><span class="'+tc+'">'+lv+' impact</span></div><div class="alt-price">'+a.currency+' '+a.price+'</div><button class="alt-btn">View product</button></div></div>'});
+    h+='</div>';el.innerHTML=h;
+  }catch(e){showToast('Error loading alternatives.')}
+});
+
 // CHAT
 document.getElementById('chat-send').addEventListener('click',sendChat);
 document.getElementById('chat-input').addEventListener('keydown',function(e){if(e.key==='Enter')sendChat()});
@@ -680,7 +731,7 @@ document.getElementById('sell-submit').addEventListener('click',function(){
   var t=document.getElementById('sell-title').value.trim(),p=document.getElementById('sell-price').value;
   if(!t){showToast('Enter an item title.');return}if(!p){showToast('Enter a price.');return}
   myListings.unshift({id:Date.now(),title:t,category:document.getElementById('sell-category').value,condition:document.getElementById('sell-condition').value,price:parseFloat(p).toFixed(2),size:document.getElementById('sell-size').value||'—',date:new Date().toLocaleDateString()});
-  renderMyListings();
+  renderMyListings();document.getElementById('stat-listed').textContent=myListings.length;
   document.getElementById('sell-title').value='';document.getElementById('sell-price').value='';document.getElementById('sell-size').value='';document.getElementById('sell-desc').value='';document.getElementById('upload-preview').innerHTML='';uploadedImages=[];
   logReward('recycle');showToast('Item listed! +25 bonus points earned.');
 });
@@ -688,10 +739,80 @@ function renderMyListings(){var el=document.getElementById('my-listings'),ct=doc
 
 // REWARDS
 var rwPts={rewear:5,donation:15,repair:10,recycle:20},rwLabels={rewear:'Rewear',donation:'Donation',repair:'Repair',recycle:'Recycle'},rwIcons={rewear:'👕',donation:'🎁',repair:'🧵',recycle:'♻️'};
-async function logReward(type){try{await fetch('/api/rewards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:userId,type:type,points:rwPts[type],itemDescription:rwLabels[type]+' logged',timestamp:new Date().toISOString()})});var r=await fetch('/api/rewards/'+userId);var d=await r.json();var b=d.balance||0;document.getElementById('pts-val').textContent=b.toLocaleString();document.getElementById('rw-total').textContent=b.toLocaleString();document.getElementById('rw-total-page').textContent=b;updateLevel(b);if(d.history){document.getElementById('rw-actions').textContent=d.history.length;renderRewardHistory(d.history)}var msg=document.getElementById('rw-msg');msg.textContent='✓ +'+rwPts[type]+' points for '+type+'!';msg.style.display='block';setTimeout(function(){msg.style.display='none'},3000)}catch(e){}}
+async function logReward(type){try{await fetch('/api/rewards',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:userId,type:type,points:rwPts[type],itemDescription:rwLabels[type]+' logged',timestamp:new Date().toISOString()})});var r=await fetch('/api/rewards/'+userId);var d=await r.json();var b=d.balance||0;document.getElementById('pts-val').textContent=b.toLocaleString();document.getElementById('stat-points').textContent=b;document.getElementById('rw-total').textContent=b.toLocaleString();document.getElementById('rw-total-page').textContent=b;updateLevel(b);if(d.history){document.getElementById('rw-actions').textContent=d.history.length;renderRewardHistory(d.history)}var msg=document.getElementById('rw-msg');msg.textContent='✓ +'+rwPts[type]+' points for '+type+'!';msg.style.display='block';setTimeout(function(){msg.style.display='none'},3000)}catch(e){}}
 function updateLevel(p){document.getElementById('rw-level').textContent=p>=1000?'🌍 Earth Guardian':p>=500?'🌳 Tree':p>=100?'🌿 Sprout':'🌱 Seedling'}
 function renderRewardHistory(ev){var el=document.getElementById('rw-history');if(!ev.length)return;var h='';ev.slice(-10).reverse().forEach(function(e){var ic=rwIcons[e.type]||'🏆';h+='<div style="display:flex;align-items:center;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border-light);font-size:.75rem"><span>'+ic+' '+e.itemDescription+'</span><span style="color:var(--green-dark);font-weight:600">+'+e.points+'</span><span style="color:var(--text-muted);font-size:.65rem">'+new Date(e.timestamp).toLocaleDateString()+'</span></div>'});el.innerHTML=h}
 
+// LOCATIONS
+document.getElementById('loc-go').addEventListener('click',findLoc);
+async function findLoc(){var lat=document.getElementById('loc-lat').value,lng=document.getElementById('loc-lng').value,rad=document.getElementById('loc-radius').value||50;var el=document.getElementById('loc-results');el.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--text-dim)">Searching...</div>';
+  try{var r=await fetch('/api/locations?lat='+lat+'&lng='+lng+'&radius='+rad);var d=await r.json();if(!d.length){el.innerHTML='<div class="empty"><div class="ei">📍</div><p>No locations found.</p></div>';return}var h='';d.forEach(function(l){var tc=l.type==='donation'?'background:var(--green-pale);color:var(--green-dark)':'background:var(--purple-pale);color:var(--purple)';var dir='https://www.google.com/maps/dir/?api=1&destination='+l.latitude+','+l.longitude;h+='<div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.75rem;margin-bottom:.4rem"><div style="display:flex;align-items:center;gap:.3rem;margin-bottom:.15rem"><span style="font-weight:600;font-size:.8rem">'+l.name+'</span><span style="font-size:.6rem;padding:.08rem .35rem;border-radius:5px;font-weight:600;'+tc+'">'+l.type+'</span></div><div style="font-size:.72rem;color:var(--text-dim)">'+l.address+'</div><div style="font-size:.65rem;color:var(--text-muted);margin-top:.1rem">🕐 '+l.operatingHours+'</div><a href="'+dir+'" target="_blank" rel="noopener" style="font-size:.7rem;display:inline-block;margin-top:.2rem">Get Directions →</a></div>'});el.innerHTML=h}catch(e){el.innerHTML='<div class="empty"><div class="ei">⚠️</div><p>Error loading locations.</p></div>'}}
+
+// CHATBOT BUBBLE
+(function(){
+  var fab=document.getElementById('chatbot-fab'),panel=document.getElementById('chatbot-panel');
+  var msgs=document.getElementById('chatbot-msgs'),inp=document.getElementById('chatbot-input');
+  var sendBtn=document.getElementById('chatbot-send');
+  var chatHistory=[];
+  fab.addEventListener('click',function(){
+    var isOpen=panel.classList.toggle('open');
+    fab.classList.toggle('open',isOpen);
+    fab.textContent=isOpen?'✕':'💬';
+    if(isOpen)inp.focus();
+  });
+  sendBtn.addEventListener('click',sendBotMsg);
+  inp.addEventListener('keydown',function(e){if(e.key==='Enter')sendBotMsg()});
+  function sendBotMsg(){
+    var m=inp.value.trim();if(!m)return;inp.value='';
+    appendBotMsg('user',m);
+    chatHistory.push({role:'user',content:m});
+    // Show typing indicator
+    var typingEl=document.createElement('div');typingEl.className='chatbot-msg bot';typingEl.id='chatbot-typing';
+    typingEl.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+    msgs.appendChild(typingEl);msgs.scrollTop=msgs.scrollHeight;
+    fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({userId:userId,message:m,conversationHistory:chatHistory,productContext:getCurrentProductContext()})})
+      .then(function(r){return r.json()})
+      .then(function(d){
+        var t=document.getElementById('chatbot-typing');if(t)t.remove();
+        var reply=d.message||d.error||'Sorry, I could not process that.';
+        chatHistory.push({role:'assistant',content:reply});
+        appendBotMsg('bot',reply);
+      })
+      .catch(function(){
+        var t=document.getElementById('chatbot-typing');if(t)t.remove();
+        appendBotMsg('bot','Sorry, something went wrong. Please try again.');
+      });
+  }
+  function getCurrentProductContext(){
+    var name=document.getElementById('a-name').value;
+    var fabric=document.getElementById('a-fabric').value;
+    var brand=document.getElementById('a-brand').value;
+    if(!name||!fabric)return null;
+    return 'Product: '+name+', Brand: '+(brand||'Unknown')+', Fabric: '+fabric;
+  }
+  function appendBotMsg(role,text){
+    var div=document.createElement('div');div.className='chatbot-msg '+role;
+    if(role==='bot'){div.innerHTML=formatMarkdown(text)}else{div.textContent=text}
+    msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;
+  }
+  function formatMarkdown(t){
+    // Convert markdown to HTML
+    t=t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    // Bold
+    t=t.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+    // Italic
+    t=t.replace(/\*(.+?)\*/g,'<i>$1</i>');
+    // Numbered lists
+    t=t.replace(/^(\d+)\.\s+/gm,'<br>$1. ');
+    // Bullet lists
+    t=t.replace(/^[-•]\s+/gm,'<br>• ');
+    // Line breaks
+    t=t.replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
+    // Clean leading <br>
+    t=t.replace(/^(<br>)+/,'');
+    return t;
+  }
+})();
 </script>
 </body>
 </html>
