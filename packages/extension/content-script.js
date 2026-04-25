@@ -2,7 +2,7 @@
 (function () {
   if (document.getElementById("ecopulse-fab")) return;
 
-  var API_BASE = "http://localhost:3000";
+  var API_BASE = "eco-pulse-backend.vercel.app";
 
   // ===== Fabric & Material Keywords =====
   var FABRIC_KW = [
