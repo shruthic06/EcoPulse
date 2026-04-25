@@ -9,8 +9,8 @@
   width: 50px !important;
   height: 50px !important;
   border-radius: 50% !important;
-  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
-  box-shadow: 0 4px 16px rgba(34,197,94,.35) !important;
+  background: #dcfce7 !important;
+  box-shadow: 0 4px 16px rgba(34,197,94,.25) !important;
   cursor: pointer !important;
   display: flex !important;
   align-items: center !important;

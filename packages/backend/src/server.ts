@@ -56,6 +56,18 @@ app.get("/api/image-proxy", async (req: Request, res: Response) => {
   }
 });
 
+// Serve static images
+app.get("/images/:filename", (req: Request, res: Response) => {
+  const srcPath = path.resolve(__dirname, "..", "src", req.params.filename);
+  const distPath = path.resolve(__dirname, req.params.filename);
+  const filePath = fs.existsSync(srcPath) ? srcPath : distPath;
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(404).send("Image not found");
+  }
+});
+
 // Serve dashboard at root
 app.get("/", (_req: Request, res: Response) => {
   // Try src/ first (dev), then same dir as compiled JS (dist/)
